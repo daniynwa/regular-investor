@@ -19,7 +19,7 @@ const { category, label, description, color, icon, articles } = Astro.props;
 const featured = articles.find((a: any) => a.featured) || articles[0];
 const rest = articles.filter((a: any) => a.id !== featured?.id);
 
-const colorMap: Record<string, { badge: string; accentHex: string; gradStart: string; gradEnd: string }> = {
+const colorMap = {
   blue:   { badge: 'bg-blue-500/15 text-blue-400 border-blue-500/25',   accentHex: '#3b82f6', gradStart: '#3b82f6', gradEnd: '#60a5fa' },
   green:  { badge: 'bg-green-500/15 text-green-400 border-green-500/25', accentHex: '#22c55e', gradStart: '#22c55e', gradEnd: '#4ade80' },
   red:    { badge: 'bg-red-500/15 text-red-400 border-red-500/25',       accentHex: '#ef4444', gradStart: '#ef4444', gradEnd: '#f87171' },

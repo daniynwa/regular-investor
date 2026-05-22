@@ -492,7 +492,7 @@ import Footer from '../components/Footer.astro';
       const totalI = final - P - totalC;
       const pct = (P + totalC) > 0 ? (totalI / (P + totalC) * 100) : 0;
 
-      const colorMap: Record<string, string> = {
+      const colorMap = {
         red:   'border-red-500/20 bg-red-500/5 text-red-400',
         green: 'border-green-500/20 bg-green-500/5 text-green-400',
         blue:  'border-blue-500/20 bg-blue-500/5 text-blue-400',

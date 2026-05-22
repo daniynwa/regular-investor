@@ -1,0 +1,233 @@
+---
+import Layout from '../layouts/Layout.astro';
+import TickerBar from '../components/TickerBar.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { getArticleBySlug, getRelatedArticles, getLatestArticles } from '../lib/queries.js';
+
+const { slug } = Astro.params;
+
+let article = null;
+let related = [];
+let recentOther = [];
+
+try {
+  article = await getArticleBySlug(slug);
+  if (article) {
+    [related, recentOther] = await Promise.all([
+      getRelatedArticles(article.category, slug, 3),
+      getLatestArticles(7),
+    ]);
+    recentOther = recentOther.filter((a: any) => a.slug !== slug).slice(0, 6);
+  }
+} catch {
+  // Fallback to static data
+  const staticData = await import('../data/articles.js');
+  article = staticData.articles.find((a: any) => a.slug === slug) || null;
+  if (article) {
+    related = staticData.articles.filter((a: any) => a.category === article.category && a.slug !== slug).slice(0, 3);
+    recentOther = staticData.articles.filter((a: any) => a.slug !== slug).slice(0, 6);
+  }
+}
+
+if (!article) return Astro.redirect('/404');
+
+const categoryColors: Record<string, string> = {
+  Economics:  'bg-blue-500/15 text-blue-400 border-blue-500/25',
+  Investment: 'bg-green-500/15 text-green-400 border-green-500/25',
+  Business:   'bg-amber-500/15 text-amber-400 border-amber-500/25',
+  Global:     'bg-purple-500/15 text-purple-400 border-purple-500/25',
+  Technology: 'bg-teal-500/15 text-teal-400 border-teal-500/25',
+  Nasional:   'bg-red-500/15 text-red-400 border-red-500/25',
+};
+const catStyle = categoryColors[article.category] || 'bg-slate-500/15 text-slate-400 border-slate-500/25';
+
+function formatDate(d: any) {
+  const date = d instanceof Date ? d : new Date(d);
+  return date.toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+}
+
+// Full content: use article.content from DB if available, else generate from excerpt
+const hasContent = article.content && article.content.trim().length > 50;
+const fallbackParagraphs = [
+  `Perkembangan ini mendapat perhatian luas dari para pelaku pasar dan investor di seluruh dunia. Berbagai lembaga keuangan internasional turut mencermati dampak yang mungkin ditimbulkan dari kebijakan dan kondisi yang sedang berkembang saat ini.`,
+  `Para analis menilai bahwa situasi ini perlu dipantau secara seksama. Faktor-faktor eksternal seperti kondisi geopolitik global, kebijakan moneter negara-negara besar, serta dinamika harga komoditas turut berperan dalam membentuk lanskap investasi yang kian kompleks.`,
+  `Dari sisi fundamental, data-data makroekonomi terkini menunjukkan sinyal yang beragam. Di satu sisi terdapat tekanan yang masih perlu diwaspadai, namun di sisi lain ketahanan konsumsi domestik dan pertumbuhan sektor riil memberikan harapan yang positif.`,
+  `Investor disarankan untuk tetap disiplin dalam strategi investasi jangka panjang dan tidak terbawa sentimen jangka pendek yang cenderung fluktuatif. Diversifikasi portofolio lintas aset dan sektor menjadi langkah bijak di tengah ketidakpastian yang masih membayangi.`,
+  `Regular Investor akan terus memantau perkembangan ini dan menyajikan analisis terkini. Pantau terus kanal berita dan tools kalkulator kami untuk perencanaan finansial yang lebih optimal.`,
+];
+---
+
+<Layout title={`${article.title} — Regular Investor`} description={article.excerpt}>
+  <TickerBar />
+  <Header />
+
+  <main class="max-w-7xl mx-auto px-4 py-8">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+
+      <!-- ── ARTICLE ─────────────────────────────────────────────────────── -->
+      <article class="lg:col-span-8">
+        <!-- Breadcrumb -->
+        <nav class="flex items-center gap-2 text-xs text-slate-500 mb-5 flex-wrap">
+          <a href="/" class="hover:text-green-400 transition-colors">Beranda</a>
+          <span>›</span>
+          <a href={`/${article.category.toLowerCase()}`} class="hover:text-green-400 transition-colors">{article.category}</a>
+          <span>›</span>
+          <span class="text-slate-600 truncate max-w-xs">{article.title.slice(0, 50)}…</span>
+        </nav>
+
+        <!-- Badges -->
+        <div class="flex items-center gap-2 mb-4 flex-wrap">
+          <a href={`/${article.category.toLowerCase()}`} class={`tag-badge border ${catStyle} hover:opacity-80 transition-opacity`}>{article.category}</a>
+          <span class="tag-badge bg-slate-500/10 text-slate-500 border border-slate-500/20">{article.tag}</span>
+        </div>
+
+        <!-- Title -->
+        <h1 class="text-2xl md:text-3xl font-black text-white leading-snug mb-5">{article.title}</h1>
+
+        <!-- Meta -->
+        <div class="flex items-center gap-4 mb-6 pb-6 border-b border-[#1e2d3d]">
+          <div class="w-9 h-9 rounded-full bg-gradient-to-br from-green-500 to-blue-500 flex items-center justify-center text-black font-black text-sm flex-shrink-0">RI</div>
+          <div class="flex-1 min-w-0">
+            <p class="text-xs font-semibold text-slate-300">Tim Redaksi Regular Investor</p>
+            <p class="text-xs text-slate-500">{formatDate(article.date)}</p>
+          </div>
+          <div class="flex items-center gap-1.5 text-xs text-slate-500 flex-shrink-0">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            {article.read_time || article.readTime || 3} menit
+          </div>
+          <div class="hidden sm:flex items-center gap-1.5">
+            {['X', 'FB'].map(s => (
+              <button class="w-7 h-7 flex items-center justify-center bg-[#1e2d3d] hover:bg-green-500/15 rounded-lg text-slate-500 hover:text-green-400 transition-all text-[10px] font-bold">{s}</button>
+            ))}
+          </div>
+        </div>
+
+        <!-- Hero image -->
+        <div class="relative rounded-2xl overflow-hidden mb-8" style="aspect-ratio:16/9">
+          <img src={article.image} alt={article.title}
+            class="w-full h-full object-cover" loading="eager"
+            onerror="this.src='https://images.unsplash.com/photo-1611273426858-450d8e3c9fce?w=900&auto=format&fit=crop'"/>
+          <div class="absolute inset-0 bg-gradient-to-t from-[#0b1120]/30 to-transparent pointer-events-none"></div>
+        </div>
+
+        <!-- Lead excerpt -->
+        <div class="border-l-2 border-green-500 pl-4 mb-8 bg-green-500/5 rounded-r-xl py-3 pr-3">
+          <p class="text-slate-300 text-sm leading-relaxed font-medium italic">{article.excerpt}</p>
+        </div>
+
+        <!-- Body content -->
+        <div class="space-y-5 text-slate-300 text-sm leading-relaxed">
+          {hasContent
+            ? <div set:html={article.content} class="prose-ri" />
+            : fallbackParagraphs.map(p => <p>{p}</p>)
+          }
+        </div>
+
+        <!-- Source notice -->
+        <div class="mt-8 p-4 bg-[#151f2e] border border-[#1e2d3d] rounded-xl flex items-start gap-3">
+          <svg class="w-4 h-4 text-amber-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            <span class="text-amber-400 font-semibold">Disclaimer:</span> Konten ini bersifat informatif dan bukan merupakan saran investasi. Selalu lakukan riset mandiri sebelum mengambil keputusan investasi.
+          </p>
+        </div>
+
+        <!-- Tags -->
+        <div class="mt-6 flex flex-wrap gap-2 pb-6 border-b border-[#1e2d3d]">
+          <span class="text-xs text-slate-500 mr-1">Tags:</span>
+          {[article.category, article.tag].filter(Boolean).map(tag => (
+            <span class="text-xs bg-[#1e2d3d] hover:bg-green-500/10 text-slate-400 hover:text-green-400 px-3 py-1 rounded-lg cursor-pointer transition-all">#{tag}</span>
+          ))}
+        </div>
+
+        <!-- Related -->
+        {related.length > 0 && (
+          <div class="mt-8">
+            <h2 class="text-base font-bold text-white mb-4 flex items-center gap-2">
+              <span class="w-1 h-5 bg-gradient-to-b from-green-500 to-blue-500 rounded-full inline-block"></span>
+              Artikel Terkait
+            </h2>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              {related.map((rel: any) => (
+                <a href={`/${rel.slug}`} class="group bg-[#151f2e] border border-[#1e2d3d] rounded-xl overflow-hidden card-hover">
+                  <div class="aspect-video overflow-hidden">
+                    <img src={rel.image} alt={rel.title}
+                      class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      loading="lazy"
+                      onerror="this.src='https://images.unsplash.com/photo-1611273426858-450d8e3c9fce?w=400&auto=format&fit=crop'"/>
+                  </div>
+                  <div class="p-3">
+                    <span class={`tag-badge border ${catStyle} mb-2 inline-block`}>{rel.category}</span>
+                    <h3 class="text-xs font-semibold text-slate-200 group-hover:text-green-400 transition-colors line-clamp-2 leading-snug">{rel.title}</h3>
+                  </div>
+                </a>
+              ))}
+            </div>
+          </div>
+        )}
+      </article>
+
+      <!-- ── SIDEBAR ─────────────────────────────────────────────────────── -->
+      <aside class="lg:col-span-4 space-y-5">
+        <div class="bg-gradient-to-br from-[#0d2818] to-[#0b1120] border border-green-500/20 rounded-2xl p-5">
+          <div class="text-xl mb-3">🧮</div>
+          <h3 class="text-sm font-bold text-white mb-1">Kalkulator Investasi</h3>
+          <p class="text-xs text-slate-400 mb-4">Simulasikan potensi keuntungan investasi Anda secara gratis</p>
+          <div class="flex flex-col gap-2">
+            <a href="/kalkulator" class="flex items-center justify-center gap-1.5 bg-green-500 hover:bg-green-400 text-black text-xs font-bold px-3 py-2.5 rounded-lg transition-all">📈 Bunga Majemuk</a>
+            <a href="/stock-insight" class="flex items-center justify-center gap-1.5 bg-[#151f2e] hover:bg-[#1a2840] border border-[#1e2d3d] text-slate-300 text-xs font-semibold px-3 py-2.5 rounded-lg transition-all">💰 Dividend & DCA</a>
+          </div>
+        </div>
+
+        <div class="bg-[#151f2e] border border-[#1e2d3d] rounded-2xl p-4">
+          <h3 class="text-sm font-bold text-white mb-4">Berita Terbaru</h3>
+          {recentOther.map((a: any, i: number) => {
+            const cc = categoryColors[a.category] || 'bg-slate-500/15 text-slate-400 border-slate-500/25';
+            const d = a.date instanceof Date ? a.date : new Date(a.date);
+            return (
+              <a href={`/${a.slug}`} class="group flex items-start gap-3 py-3 border-b border-[#1e2d3d] last:border-0 hover:bg-white/2 rounded-lg -mx-1 px-1 transition-all">
+                <span class="text-slate-700 font-black text-lg leading-none mt-0.5 flex-shrink-0 w-5 text-center">{i + 1}</span>
+                <div class="flex-1 min-w-0">
+                  <h4 class="text-xs font-semibold text-slate-300 group-hover:text-green-400 transition-colors line-clamp-2 leading-snug mb-1">{a.title}</h4>
+                  <div class="flex items-center gap-2 text-[10px] text-slate-600">
+                    <span class={`tag-badge border ${cc}`}>{a.category}</span>
+                    <span>{d.toLocaleDateString('id-ID', { day: 'numeric', month: 'short' })}</span>
+                  </div>
+                </div>
+              </a>
+            );
+          })}
+        </div>
+
+        <div class="bg-[#151f2e] border border-[#1e2d3d] rounded-2xl p-4">
+          <div class="flex items-center justify-between mb-3">
+            <h3 class="text-xs font-bold text-white">Market Hari Ini</h3>
+            <span class="flex items-center gap-1 text-[10px] text-green-400">
+              <span class="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse inline-block"></span>Live
+            </span>
+          </div>
+          {[
+            { label: 'IHSG',    val: '7,254.18', chg: '+1.24%', up: true  },
+            { label: 'USD/IDR', val: '16,245',   chg: '-0.31%', up: false },
+            { label: 'Gold',    val: '$3,182',   chg: '+0.87%', up: true  },
+            { label: 'BTC',     val: '$104,230', chg: '+2.34%', up: true  },
+          ].map(item => (
+            <div class="flex items-center justify-between py-1.5 border-b border-[#1e2d3d] last:border-0">
+              <span class="text-xs font-semibold text-slate-400">{item.label}</span>
+              <div class="text-right">
+                <div class="text-xs font-mono text-slate-300">{item.val}</div>
+                <div class={`text-[10px] font-semibold ${item.up ? 'text-green-400' : 'text-red-400'}`}>{item.up ? '▲' : '▼'} {item.chg}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <Footer />
+</Layout>

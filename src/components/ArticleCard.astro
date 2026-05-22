@@ -1,0 +1,98 @@
+---
+interface Props {
+  title: string;
+  excerpt: string;
+  category: string;
+  tag: string;
+  date: string;
+  slug: string;
+  image: string;
+  readTime: number;
+  variant?: 'default' | 'horizontal' | 'compact';
+}
+
+const { title, excerpt, category, tag, date, slug, image, readTime, variant = 'default' } = Astro.props;
+
+function formatDate(dateStr: string) {
+  const d = new Date(dateStr);
+  return d.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
+}
+
+const categoryColors: Record<string, string> = {
+  Economics: "bg-blue-500/15 text-blue-400 border-blue-500/25",
+  Investment: "bg-green-500/15 text-green-400 border-green-500/25",
+  Business: "bg-amber-500/15 text-amber-400 border-amber-500/25",
+  Global: "bg-purple-500/15 text-purple-400 border-purple-500/25",
+  Technology: "bg-teal-500/15 text-teal-400 border-teal-500/25",
+  Nasional: "bg-red-500/15 text-red-400 border-red-500/25",
+};
+
+const catStyle = categoryColors[category] || "bg-slate-500/15 text-slate-400 border-slate-500/25";
+---
+
+{variant === 'compact' ? (
+  <a href={`/${slug}`} class="group flex items-start gap-3 py-3 border-b border-[#1e2d3d] last:border-0 hover:bg-green-500/3 -mx-2 px-2 rounded-lg transition-all">
+    <img
+      src={image}
+      alt={title}
+      class="w-16 h-16 object-cover rounded-lg flex-shrink-0 opacity-90 group-hover:opacity-100 transition-opacity"
+      loading="lazy"
+      onerror="this.src='https://images.unsplash.com/photo-1611273426858-450d8e3c9fce?w=200&auto=format&fit=crop'"
+    />
+    <div class="flex-1 min-w-0">
+      <span class={`tag-badge border ${catStyle} mb-1 inline-block`}>{category}</span>
+      <h3 class="text-xs font-semibold text-slate-300 group-hover:text-green-400 transition-colors line-clamp-2 leading-snug">
+        {title}
+      </h3>
+      <p class="text-[10px] text-slate-600 mt-1">{formatDate(date)}</p>
+    </div>
+  </a>
+) : variant === 'horizontal' ? (
+  <a href={`/${slug}`} class="group flex gap-4 bg-[#151f2e] border border-[#1e2d3d] rounded-xl p-4 card-hover">
+    <img
+      src={image}
+      alt={title}
+      class="w-28 h-24 object-cover rounded-lg flex-shrink-0"
+      loading="lazy"
+      onerror="this.src='https://images.unsplash.com/photo-1611273426858-450d8e3c9fce?w=300&auto=format&fit=crop'"
+    />
+    <div class="flex-1 min-w-0">
+      <div class="flex items-center gap-2 mb-2">
+        <span class={`tag-badge border ${catStyle}`}>{category}</span>
+      </div>
+      <h3 class="text-sm font-semibold text-slate-200 group-hover:text-green-400 transition-colors line-clamp-2 leading-snug mb-2">
+        {title}
+      </h3>
+      <div class="flex items-center gap-2 text-xs text-slate-600">
+        <span>{formatDate(date)}</span>
+        <span>·</span>
+        <span>{readTime} mnt</span>
+      </div>
+    </div>
+  </a>
+) : (
+  <a href={`/${slug}`} class="group flex flex-col bg-[#151f2e] border border-[#1e2d3d] rounded-2xl overflow-hidden card-hover">
+    <div class="relative overflow-hidden aspect-[16/9]">
+      <img
+        src={image}
+        alt={title}
+        class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+        loading="lazy"
+        onerror="this.src='https://images.unsplash.com/photo-1611273426858-450d8e3c9fce?w=600&auto=format&fit=crop'"
+      />
+      <div class="absolute top-3 left-3 flex gap-1.5">
+        <span class={`tag-badge border ${catStyle}`}>{category}</span>
+      </div>
+    </div>
+    <div class="p-4 flex flex-col flex-1">
+      <h3 class="text-sm font-semibold text-slate-200 group-hover:text-green-400 transition-colors line-clamp-2 leading-snug mb-2 flex-1">
+        {title}
+      </h3>
+      <p class="text-xs text-slate-500 line-clamp-2 mb-3">{excerpt}</p>
+      <div class="flex items-center justify-between text-xs text-slate-600 pt-3 border-t border-[#1e2d3d]">
+        <span>{formatDate(date)}</span>
+        <span>{readTime} menit baca</span>
+      </div>
+    </div>
+  </a>
+)}

@@ -1,0 +1,132 @@
+---
+import Layout from '../layouts/Layout.astro';
+import TickerBar from '../components/TickerBar.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import ArticleCard from '../components/ArticleCard.astro';
+
+interface Props {
+  category: string;
+  label: string;
+  description: string;
+  color: string;
+  icon: string;
+  articles: any[];
+}
+
+const { category, label, description, color, icon, articles } = Astro.props;
+
+const featured = articles.find((a: any) => a.featured) || articles[0];
+const rest = articles.filter((a: any) => a.id !== featured?.id);
+
+const colorMap: Record<string, { badge: string; accentHex: string; gradStart: string; gradEnd: string }> = {
+  blue:   { badge: 'bg-blue-500/15 text-blue-400 border-blue-500/25',   accentHex: '#3b82f6', gradStart: '#3b82f6', gradEnd: '#60a5fa' },
+  green:  { badge: 'bg-green-500/15 text-green-400 border-green-500/25', accentHex: '#22c55e', gradStart: '#22c55e', gradEnd: '#4ade80' },
+  red:    { badge: 'bg-red-500/15 text-red-400 border-red-500/25',       accentHex: '#ef4444', gradStart: '#ef4444', gradEnd: '#f87171' },
+  purple: { badge: 'bg-purple-500/15 text-purple-400 border-purple-500/25', accentHex: '#a855f7', gradStart: '#a855f7', gradEnd: '#c084fc' },
+  teal:   { badge: 'bg-teal-500/15 text-teal-400 border-teal-500/25',   accentHex: '#14b8a6', gradStart: '#14b8a6', gradEnd: '#2dd4bf' },
+  amber:  { badge: 'bg-amber-500/15 text-amber-400 border-amber-500/25', accentHex: '#f59e0b', gradStart: '#f59e0b', gradEnd: '#fbbf24' },
+};
+const c = colorMap[color] ?? colorMap.blue;
+
+function formatDate(d: any) {
+  const date = d instanceof Date ? d : new Date(d);
+  return date.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+}
+function formatShort(d: any) {
+  const date = d instanceof Date ? d : new Date(d);
+  return date.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
+}
+---
+
+<Layout title={`${label} — Regular Investor`} description={description}>
+  <TickerBar />
+  <Header />
+
+  <main class="max-w-7xl mx-auto px-4 py-8">
+    <!-- Page header -->
+    <div class="flex items-center gap-4 mb-8">
+      <div class="w-1 h-10 rounded-full" style={`background: linear-gradient(to bottom, ${c.gradStart}, ${c.gradEnd})`}></div>
+      <div>
+        <div class="flex items-center gap-2 mb-1">
+          <span class={`tag-badge border ${c.badge}`}>{label}</span>
+          <span class="text-slate-500 text-xs">{articles.length} artikel</span>
+        </div>
+        <h1 class="text-2xl font-black text-white">{icon} {label}</h1>
+        <p class="text-slate-400 text-sm mt-0.5">{description}</p>
+      </div>
+    </div>
+
+    {featured && (
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-10">
+        <a href={`/${featured.slug}`} class="lg:col-span-7 group relative overflow-hidden rounded-2xl card-hover block">
+          <div class="relative aspect-[16/9] overflow-hidden rounded-2xl">
+            <img src={featured.image} alt={featured.title}
+              class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+              loading="eager"
+              onerror="this.src='https://images.unsplash.com/photo-1611273426858-450d8e3c9fce?w=900&auto=format&fit=crop'"/>
+            <div class="absolute inset-0 bg-gradient-to-t from-[#0b1120] via-[#0b1120]/50 to-transparent"></div>
+            <div class="absolute bottom-0 left-0 right-0 p-6">
+              <span class={`tag-badge border ${c.badge} mb-3 inline-block`}>Featured</span>
+              <h2 class="text-white font-bold text-xl leading-snug group-hover:text-green-300 transition-colors line-clamp-3 mb-3">{featured.title}</h2>
+              <p class="text-slate-400 text-sm line-clamp-2 mb-4 hidden md:block">{featured.excerpt}</p>
+              <div class="flex items-center gap-3 text-xs text-slate-500">
+                <span>{formatDate(featured.date)}</span>
+                <span>·</span>
+                <span>{featured.read_time || featured.readTime || 3} menit baca</span>
+              </div>
+            </div>
+          </div>
+        </a>
+
+        <div class="lg:col-span-5 flex flex-col gap-3">
+          {rest.slice(0, 4).map((article: any) => (
+            <a href={`/${article.slug}`} class="group flex gap-3 bg-[#151f2e] border border-[#1e2d3d] rounded-xl p-3.5 card-hover">
+              <img src={article.image} alt={article.title}
+                class="w-20 h-16 object-cover rounded-lg flex-shrink-0" loading="lazy"
+                onerror="this.src='https://images.unsplash.com/photo-1611273426858-450d8e3c9fce?w=200&auto=format&fit=crop'"/>
+              <div class="flex-1 min-w-0">
+                <h3 class="text-xs font-semibold text-slate-200 group-hover:text-green-400 transition-colors line-clamp-2 leading-snug mb-1">{article.title}</h3>
+                <div class="flex items-center gap-2 text-[10px] text-slate-600">
+                  <span>{formatShort(article.date)}</span>
+                  <span>·</span>
+                  <span>{article.read_time || article.readTime || 3} mnt</span>
+                </div>
+              </div>
+            </a>
+          ))}
+        </div>
+      </div>
+    )}
+
+    <div class="flex items-center gap-3 mb-6">
+      <div class="w-1 h-5 rounded-full" style={`background: linear-gradient(to bottom, ${c.gradStart}, ${c.gradEnd})`}></div>
+      <h2 class="text-base font-bold text-white">Semua Artikel {label}</h2>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
+      {articles.map((article: any) => (
+        <ArticleCard
+          title={article.title}
+          excerpt={article.excerpt}
+          category={article.category}
+          tag={article.tag}
+          date={article.date instanceof Date ? article.date.toISOString().split('T')[0] : String(article.date)}
+          slug={article.slug}
+          image={article.image}
+          readTime={article.read_time || article.readTime || 3}
+          variant="default"
+        />
+      ))}
+    </div>
+
+    {articles.length === 0 && (
+      <div class="text-center py-20">
+        <div class="text-5xl mb-4">{icon}</div>
+        <p class="text-slate-500">Belum ada artikel di kategori ini.</p>
+      </div>
+    )}
+  </main>
+
+  <Footer />
+</Layout>

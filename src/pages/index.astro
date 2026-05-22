@@ -1,0 +1,165 @@
+---
+import Layout from '../layouts/Layout.astro';
+import TickerBar from '../components/TickerBar.astro';
+import Header from '../components/Header.astro';
+import Hero from '../components/Hero.astro';
+import Newsletter from '../components/Newsletter.astro';
+import Footer from '../components/Footer.astro';
+import ArticleCard from '../components/ArticleCard.astro';
+import Sidebar from '../components/Sidebar.astro';
+import { getAllArticles, getFeaturedArticles } from '../lib/queries.js';
+import { categories, marketData } from '../data/static.js';
+
+let articles = [];
+let featured = [];
+let dbError = false;
+
+try {
+  [articles, featured] = await Promise.all([
+    getAllArticles({ limit: 12 }),
+    getFeaturedArticles(2),
+  ]);
+} catch (e) {
+  dbError = true;
+  // Fallback to static data during development (no DB)
+  const staticData = await import('../data/articles.js');
+  articles = staticData.articles.slice(0, 12);
+  featured = staticData.articles.filter(a => a.featured).slice(0, 2);
+}
+---
+
+<Layout>
+  <TickerBar />
+  <Header />
+
+  <main>
+    <!-- Hero with dynamic data -->
+    <Hero featured={featured} allArticles={articles} />
+
+    <!-- Divider -->
+    <div class="max-w-7xl mx-auto px-4">
+      <div class="h-px bg-gradient-to-r from-transparent via-[#1e2d3d] to-transparent"></div>
+    </div>
+
+    <!-- Main content + Sidebar -->
+    <div class="max-w-7xl mx-auto px-4 py-8">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+
+        <!-- Main content -->
+        <div class="lg:col-span-8">
+          <div class="flex items-center justify-between mb-6">
+            <div class="flex items-center gap-3">
+              <div class="w-1 h-6 bg-gradient-to-b from-green-500 to-blue-500 rounded-full"></div>
+              <h2 class="text-lg font-bold text-white">Berita Terkini</h2>
+            </div>
+            <div class="hidden sm:flex items-center gap-1.5">
+              {['Semua', 'Economics', 'Investment', 'Global'].map((cat, i) => (
+                <a
+                  href={i === 0 ? '/' : `/${cat.toLowerCase()}`}
+                  class={`text-xs font-semibold px-3 py-1.5 rounded-lg transition-all ${
+                    i === 0
+                      ? 'bg-green-500/15 text-green-400 border border-green-500/30'
+                      : 'bg-[#151f2e] text-slate-400 border border-[#1e2d3d] hover:text-green-400 hover:border-green-500/30'
+                  }`}
+                >
+                  {cat}
+                </a>
+              ))}
+            </div>
+          </div>
+
+          {dbError && (
+            <div class="mb-4 px-4 py-3 bg-amber-500/10 border border-amber-500/20 rounded-xl text-xs text-amber-400">
+              ⚠️ Menampilkan data statis — database belum terhubung
+            </div>
+          )}
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+            {articles.slice(0, 6).map(article => (
+              <ArticleCard
+                title={article.title}
+                excerpt={article.excerpt}
+                category={article.category}
+                tag={article.tag}
+                date={article.date instanceof Date ? article.date.toISOString().split('T')[0] : String(article.date)}
+                slug={article.slug}
+                image={article.image}
+                readTime={article.read_time || article.readTime || 3}
+                variant="default"
+              />
+            ))}
+          </div>
+
+          <div class="text-center">
+            <a href="/economics" class="inline-flex items-center gap-2 bg-[#151f2e] hover:bg-[#1a2840] border border-[#1e2d3d] hover:border-green-500/30 text-slate-300 hover:text-green-400 text-sm font-semibold px-6 py-3 rounded-xl transition-all duration-150">
+              Lihat Semua Berita
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="lg:col-span-4">
+          <Sidebar articles={articles} />
+        </div>
+      </div>
+    </div>
+
+    <!-- Category sections -->
+    <div class="bg-[#0d1525] border-y border-[#1e2d3d]">
+      <div class="max-w-7xl mx-auto px-4 py-8 space-y-12">
+        {[
+          { cat: 'Economics', color: 'blue', href: '/economics' },
+          { cat: 'Investment', color: 'green', href: '/investment' },
+          { cat: 'Global',    color: 'purple', href: '/global' },
+        ].map(({ cat, color, href }) => {
+          const catArticles = articles.filter(a => a.category === cat).slice(0, 3);
+          if (!catArticles.length) return null;
+          const colorMap: Record<string, string> = {
+            blue: 'from-blue-500 to-blue-400', green: 'from-green-500 to-green-400', purple: 'from-purple-500 to-purple-400',
+          };
+          const textMap: Record<string, string> = {
+            blue: 'text-blue-400', green: 'text-green-400', purple: 'text-purple-400',
+          };
+          return (
+            <div>
+              <div class="flex items-center justify-between mb-5">
+                <div class="flex items-center gap-3">
+                  <div class={`w-1 h-6 bg-gradient-to-b ${colorMap[color]} rounded-full`}></div>
+                  <h2 class="text-lg font-bold text-white">{cat}</h2>
+                </div>
+                <a href={href} class={`text-xs ${textMap[color]} hover:opacity-80 transition-opacity flex items-center gap-1`}>
+                  Semua
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                  </svg>
+                </a>
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {catArticles.map(article => (
+                  <ArticleCard
+                    title={article.title}
+                    excerpt={article.excerpt}
+                    category={article.category}
+                    tag={article.tag}
+                    date={article.date instanceof Date ? article.date.toISOString().split('T')[0] : String(article.date)}
+                    slug={article.slug}
+                    image={article.image}
+                    readTime={article.read_time || article.readTime || 3}
+                    variant="default"
+                  />
+                ))}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+
+    <Newsletter />
+  </main>
+
+  <Footer />
+</Layout>

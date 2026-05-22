@@ -1,0 +1,15 @@
+---
+import CategoryPage from '../components/CategoryPage.astro';
+import { getArticlesByCategory } from '../lib/queries.js';
+
+let articles = [];
+try {
+  articles = await getArticlesByCategory('Economics');
+} catch {
+  const s = await import('../data/articles.js');
+  articles = s.articles.filter((a: any) => a.category === 'Economics');
+}
+---
+<CategoryPage category="Economics" label="Economics"
+  description="Analisis kebijakan fiskal, moneter, data makroekonomi, dan kondisi perekonomian Indonesia & global."
+  color="blue" icon="🏦" articles={articles} />

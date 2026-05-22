@@ -1,0 +1,10 @@
+---
+import CategoryPage from '../components/CategoryPage.astro';
+import { getArticlesByCategory } from '../lib/queries.js';
+let articles = [];
+try { articles = await getArticlesByCategory('Nasional'); }
+catch { const s = await import('../data/articles.js'); articles = s.articles.filter((a: any) => a.category === 'Nasional'); }
+---
+<CategoryPage category="Nasional" label="Nasional"
+  description="Berita kebijakan pemerintah, regulasi, infrastruktur, dan perkembangan ekonomi nasional Indonesia."
+  color="red" icon="🇮🇩" articles={articles} />

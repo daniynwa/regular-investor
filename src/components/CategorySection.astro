@@ -1,0 +1,111 @@
+---
+import { articles } from '../data/articles.js';
+import ArticleCard from './ArticleCard.astro';
+
+const economics = articles.filter(a => a.category === 'Economics');
+const investment = articles.filter(a => a.category === 'Investment');
+const global_ = articles.filter(a => a.category === 'Global');
+---
+
+<!-- Economics Section -->
+<section class="max-w-7xl mx-auto px-4 py-8">
+  <div class="flex items-center justify-between mb-5">
+    <div class="flex items-center gap-3">
+      <div class="w-1 h-6 bg-gradient-to-b from-blue-500 to-blue-400 rounded-full"></div>
+      <h2 class="text-lg font-bold text-white">Ekonomi</h2>
+    </div>
+    <a href="/economics" class="text-xs text-blue-400 hover:text-blue-300 transition-colors flex items-center gap-1">
+      Semua
+      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+      </svg>
+    </a>
+  </div>
+  <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+    {economics.slice(0, 3).map(article => (
+      <ArticleCard
+        title={article.title}
+        excerpt={article.excerpt}
+        category={article.category}
+        tag={article.tag}
+        date={article.date}
+        slug={article.slug}
+        image={article.image}
+        readTime={article.readTime}
+        variant="default"
+      />
+    ))}
+  </div>
+</section>
+
+<!-- Divider with gradient -->
+<div class="max-w-7xl mx-auto px-4">
+  <div class="h-px bg-gradient-to-r from-transparent via-[#1e2d3d] to-transparent"></div>
+</div>
+
+<!-- Investment Section -->
+<section class="max-w-7xl mx-auto px-4 py-8">
+  <div class="flex items-center justify-between mb-5">
+    <div class="flex items-center gap-3">
+      <div class="w-1 h-6 bg-gradient-to-b from-green-500 to-green-400 rounded-full"></div>
+      <h2 class="text-lg font-bold text-white">Investasi</h2>
+    </div>
+    <a href="/investment" class="text-xs text-green-400 hover:text-green-300 transition-colors flex items-center gap-1">
+      Semua
+      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+      </svg>
+    </a>
+  </div>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    {investment.slice(0, 4).map(article => (
+      <ArticleCard
+        title={article.title}
+        excerpt={article.excerpt}
+        category={article.category}
+        tag={article.tag}
+        date={article.date}
+        slug={article.slug}
+        image={article.image}
+        readTime={article.readTime}
+        variant="horizontal"
+      />
+    ))}
+  </div>
+</section>
+
+<!-- Divider -->
+<div class="max-w-7xl mx-auto px-4">
+  <div class="h-px bg-gradient-to-r from-transparent via-[#1e2d3d] to-transparent"></div>
+</div>
+
+<!-- Global Section -->
+<section class="max-w-7xl mx-auto px-4 py-8">
+  <div class="flex items-center justify-between mb-5">
+    <div class="flex items-center gap-3">
+      <div class="w-1 h-6 bg-gradient-to-b from-purple-500 to-purple-400 rounded-full"></div>
+      <h2 class="text-lg font-bold text-white">Global</h2>
+    </div>
+    <a href="/global" class="text-xs text-purple-400 hover:text-purple-300 transition-colors flex items-center gap-1">
+      Semua
+      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+      </svg>
+    </a>
+  </div>
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+    {global_.slice(0, 3).map(article => (
+      <ArticleCard
+        title={article.title}
+        excerpt={article.excerpt}
+        category={article.category}
+        tag={article.tag}
+        date={article.date}
+        slug={article.slug}
+        image={article.image}
+        readTime={article.readTime}
+        variant="default"
+      />
+    ))}
+  </div>
+</section>

@@ -1,0 +1,29 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = "Regular Investor — You Sleep and Makes Money",
+  description = "Portal berita keuangan dan investasi terpercaya. Analisis pasar, saham, ekonomi, dan investasi untuk investor Indonesia.",
+} = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="id" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <title>{title}</title>
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  </head>
+  <body class="bg-[#0b1120] text-slate-200 font-sans antialiased">
+    <slot />
+  </body>
+</html>

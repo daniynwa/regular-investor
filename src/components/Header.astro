@@ -1,0 +1,96 @@
+---
+import { categories } from '../data/articles.js';
+---
+
+<header class="glass sticky top-0 z-50 border-b border-[#1e2d3d]">
+  <div class="max-w-7xl mx-auto px-4">
+    <!-- Top bar -->
+    <div class="flex items-center justify-between h-16">
+      <!-- Logo -->
+      <a href="/" class="flex items-center gap-3 group">
+        <div class="relative w-10 h-10">
+          <!-- Logo icon — circle with arrow -->
+          <svg viewBox="0 0 40 40" class="w-10 h-10" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="20" cy="20" r="19" stroke="url(#logoGrad)" stroke-width="2"/>
+            <!-- Bar chart -->
+            <rect x="10" y="24" width="4" height="8" rx="1" fill="#dc2626"/>
+            <rect x="16" y="19" width="4" height="13" rx="1" fill="#dc2626"/>
+            <rect x="22" y="14" width="4" height="18" rx="1" fill="#dc2626"/>
+            <!-- Arrow -->
+            <path d="M9 28 Q20 8 33 10" stroke="url(#arrowGrad)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+            <path d="M29 7 L33 10 L30 14" stroke="#22c55e" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+            <defs>
+              <linearGradient id="logoGrad" x1="0" y1="0" x2="40" y2="40">
+                <stop offset="0%" stop-color="#3b82f6"/>
+                <stop offset="100%" stop-color="#22c55e"/>
+              </linearGradient>
+              <linearGradient id="arrowGrad" x1="0" y1="0" x2="40" y2="0">
+                <stop offset="0%" stop-color="#3b82f6"/>
+                <stop offset="100%" stop-color="#22c55e"/>
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+        <div>
+          <span class="gradient-text font-black text-xl tracking-tight leading-none">Regular</span>
+          <span class="text-white font-black text-xl tracking-tight leading-none"> Investor</span>
+          <div class="text-[9px] text-slate-500 tracking-widest uppercase font-medium">You Sleep & Makes Money</div>
+        </div>
+      </a>
+
+      <!-- Desktop Nav -->
+      <nav class="hidden lg:flex items-center gap-1">
+        {categories.map((cat) => (
+          <a
+            href={`/${cat.slug}`}
+            class="px-3 py-2 text-sm text-slate-400 hover:text-green-400 hover:bg-green-500/5 rounded-lg transition-all duration-150 font-medium"
+          >
+            {cat.name}
+          </a>
+        ))}
+      </nav>
+
+      <!-- Right actions -->
+      <div class="flex items-center gap-3">
+        <!-- Search -->
+        <button class="hidden sm:flex items-center gap-2 bg-[#151f2e] hover:bg-[#1a2840] border border-[#1e2d3d] rounded-lg px-3 py-2 text-sm text-slate-500 hover:text-slate-300 transition-all duration-150">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+          </svg>
+          <span class="hidden md:inline text-xs">Cari berita...</span>
+        </button>
+        <!-- Subscribe CTA -->
+        <a href="#newsletter" class="hidden sm:flex items-center gap-1.5 bg-green-500 hover:bg-green-400 text-black text-xs font-bold px-4 py-2 rounded-lg transition-all duration-150 tracking-wide">
+          Subscribe
+        </a>
+        <!-- Mobile menu button -->
+        <button id="mobileMenuBtn" class="lg:hidden flex items-center justify-center w-9 h-9 rounded-lg bg-[#151f2e] border border-[#1e2d3d] text-slate-400 hover:text-white">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile nav -->
+  <div id="mobileMenu" class="hidden lg:hidden border-t border-[#1e2d3d] bg-[#0d1525]">
+    <div class="max-w-7xl mx-auto px-4 py-3 grid grid-cols-2 gap-1">
+      {categories.map((cat) => (
+        <a
+          href={`/${cat.slug}`}
+          class="flex items-center gap-2 px-3 py-2.5 text-sm text-slate-400 hover:text-green-400 hover:bg-green-500/5 rounded-lg transition-all"
+        >
+          <span>{cat.icon}</span>
+          <span>{cat.name}</span>
+        </a>
+      ))}
+    </div>
+  </div>
+</header>
+
+<script>
+  const btn = document.getElementById('mobileMenuBtn');
+  const menu = document.getElementById('mobileMenu');
+  btn?.addEventListener('click', () => menu?.classList.toggle('hidden'));
+</script>

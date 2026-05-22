@@ -1,0 +1,330 @@
+---
+import { verifySession } from '../../../lib/auth.js';
+
+const session = await verifySession(Astro.request);
+if (!session) return Astro.redirect('/admin');
+---
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Artikel Baru — Admin</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: #0b1120; color: #e2e8f0; font-family: 'Inter', sans-serif; min-height: 100vh; }
+    .layout { display: flex; min-height: 100vh; }
+    /* Sidebar */
+    .sidebar { width: 220px; background: #080f1c; border-right: 1px solid #1e2d3d; padding: 20px 0; flex-shrink: 0; position: fixed; top: 0; left: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-logo { padding: 0 20px 24px; border-bottom: 1px solid #1e2d3d; }
+    .logo-brand { font-size: 16px; font-weight: 900; }
+    .logo-brand span { background: linear-gradient(135deg, #3b82f6, #22c55e); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .logo-sub { font-size: 9px; color: #475569; letter-spacing: 0.12em; text-transform: uppercase; margin-top: 2px; }
+    .nav-section { padding: 16px 20px 8px; font-size: 9px; font-weight: 700; color: #334155; letter-spacing: 0.12em; text-transform: uppercase; }
+    .nav-item { display: flex; align-items: center; gap: 10px; padding: 9px 20px; font-size: 13px; color: #64748b; text-decoration: none; transition: all 0.15s; }
+    .nav-item:hover, .nav-item.active { color: #22c55e; background: rgba(34,197,94,0.07); }
+    .nav-item.active { border-right: 2px solid #22c55e; }
+    /* Main */
+    .main { margin-left: 220px; flex: 1; }
+    .topbar { background: #0d1525; border-bottom: 1px solid #1e2d3d; padding: 14px 28px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 10; }
+    .topbar-title { font-size: 16px; font-weight: 800; color: #fff; }
+    .topbar-actions { display: flex; align-items: center; gap: 10px; }
+    .btn { padding: 8px 16px; border-radius: 10px; font-size: 12px; font-weight: 700; border: none; cursor: pointer; text-decoration: none; transition: all 0.15s; display: inline-flex; align-items: center; gap: 6px; font-family: inherit; }
+    .btn-primary { background: #22c55e; color: #000; }
+    .btn-primary:hover { background: #4ade80; }
+    .btn-secondary { background: #151f2e; color: #94a3b8; border: 1px solid #1e2d3d; }
+    .btn-secondary:hover { color: #e2e8f0; }
+    .content { padding: 24px 28px; max-width: 900px; }
+    /* Form */
+    .form-card { background: #151f2e; border: 1px solid #1e2d3d; border-radius: 16px; padding: 28px; }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+    .form-group { display: flex; flex-direction: column; gap: 6px; }
+    .form-group.full { grid-column: 1 / -1; }
+    label { font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.1em; }
+    .field-hint { font-size: 10px; color: #334155; margin-top: -2px; }
+    input[type="text"], input[type="url"], input[type="date"], input[type="number"],
+    select, textarea {
+      background: #0b1120; border: 1px solid #1e2d3d; border-radius: 10px;
+      color: #e2e8f0; font-size: 13px; font-family: inherit;
+      padding: 10px 14px; outline: none; transition: border-color 0.15s; width: 100%;
+    }
+    input:focus, select:focus, textarea:focus { border-color: rgba(34,197,94,0.4); }
+    textarea { resize: vertical; min-height: 120px; }
+    textarea.content-area { min-height: 400px; font-size: 12px; line-height: 1.7; }
+    select option { background: #0b1120; }
+    .checkbox-row { display: flex; align-items: center; gap: 10px; padding: 10px 0; }
+    .checkbox-row input[type="checkbox"] { width: 16px; height: 16px; accent-color: #22c55e; cursor: pointer; }
+    .checkbox-row label { font-size: 13px; color: #94a3b8; text-transform: none; letter-spacing: 0; cursor: pointer; font-weight: 500; }
+    .slug-preview { font-size: 11px; color: #22c55e; margin-top: 4px; opacity: 0.8; }
+    .image-preview { margin-top: 10px; border-radius: 8px; overflow: hidden; display: none; }
+    .image-preview img { width: 100%; max-height: 180px; object-fit: cover; }
+    .form-actions { display: flex; gap: 10px; margin-top: 24px; padding-top: 20px; border-top: 1px solid #1e2d3d; }
+    .toast { position: fixed; top: 20px; right: 20px; z-index: 999; padding: 12px 20px; border-radius: 10px; font-size: 13px; font-weight: 600; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
+    .toast.show { opacity: 1; pointer-events: auto; }
+    .toast.success { background: rgba(34,197,94,0.15); border: 1px solid rgba(34,197,94,0.3); color: #4ade80; }
+    .toast.error   { background: rgba(239,68,68,0.15); border: 1px solid rgba(239,68,68,0.3); color: #f87171; }
+    .spinner { display: none; width: 14px; height: 14px; border: 2px solid rgba(0,0,0,0.3); border-top-color: #000; border-radius: 50%; animation: spin 0.6s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .section-heading { font-size: 11px; font-weight: 800; color: #3b82f6; text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 1px solid #1e2d3d; }
+  </style>
+</head>
+<body>
+<div class="layout">
+  <!-- Sidebar -->
+  <nav class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-brand"><span>Regular</span> Investor</div>
+      <div class="logo-sub">Admin Panel</div>
+    </div>
+    <div class="nav-section">Menu</div>
+    <a href="/admin/dashboard" class="nav-item">📊 Dashboard</a>
+    <a href="/admin/articles/new" class="nav-item active">✏️ Artikel Baru</a>
+    <div class="nav-section">Konten</div>
+    <a href="/admin/dashboard?cat=Economics"  class="nav-item">🏦 Economics</a>
+    <a href="/admin/dashboard?cat=Investment" class="nav-item">💰 Investment</a>
+    <a href="/admin/dashboard?cat=Nasional"   class="nav-item">🇮🇩 Nasional</a>
+    <a href="/admin/dashboard?cat=Global"     class="nav-item">🌍 Global</a>
+    <a href="/admin/dashboard?cat=Technology" class="nav-item">💻 Technology</a>
+    <div class="nav-section">Lainnya</div>
+    <a href="/" target="_blank" class="nav-item">🔗 Lihat Situs</a>
+    <a href="#" id="logoutBtn" class="nav-item">🚪 Keluar</a>
+  </nav>
+
+  <!-- Main -->
+  <div class="main">
+    <div class="topbar">
+      <span class="topbar-title">✏️ Artikel Baru</span>
+      <div class="topbar-actions">
+        <a href="/admin/dashboard" class="btn btn-secondary">← Kembali</a>
+        <button type="button" id="publishBtn" class="btn btn-primary">
+          <span class="spinner" id="spinner"></span>
+          Publikasikan
+        </button>
+      </div>
+    </div>
+
+    <div class="content">
+      <form id="articleForm">
+        <div class="form-card">
+          <!-- Basic Info -->
+          <div class="section-heading">Informasi Dasar</div>
+          <div class="form-grid">
+            <div class="form-group full">
+              <label for="title">Judul Artikel *</label>
+              <input type="text" id="title" name="title" required placeholder="Masukkan judul artikel yang menarik..."/>
+            </div>
+
+            <div class="form-group full">
+              <label for="excerpt">Ringkasan *</label>
+              <textarea id="excerpt" name="excerpt" required rows="3" placeholder="Ringkasan singkat artikel (tampil di daftar artikel)..."></textarea>
+            </div>
+
+            <div class="form-group">
+              <label for="slug">Slug URL</label>
+              <input type="text" id="slug" name="slug" placeholder="auto-generated dari judul"/>
+              <span class="slug-preview" id="slugPreview">regular-investor.com/<span id="slugVal">—</span></span>
+            </div>
+
+            <div class="form-group">
+              <label for="date">Tanggal Publish *</label>
+              <input type="date" id="date" name="date" required/>
+            </div>
+
+            <div class="form-group">
+              <label for="category">Kategori *</label>
+              <select id="category" name="category" required>
+                <option value="">-- Pilih Kategori --</option>
+                <option value="Economics">Economics</option>
+                <option value="Investment">Investment</option>
+                <option value="Nasional">Nasional</option>
+                <option value="Global">Global</option>
+                <option value="Technology">Technology</option>
+                <option value="Business">Business</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="tag">Tag</label>
+              <input type="text" id="tag" name="tag" placeholder="cth: Saham, Dividen, Makro..."/>
+            </div>
+
+            <div class="form-group">
+              <label for="read_time">Estimasi Baca (menit)</label>
+              <input type="number" id="read_time" name="read_time" min="1" max="60" value="5"/>
+            </div>
+
+            <div class="form-group" style="justify-content: flex-end;">
+              <div class="checkbox-row">
+                <input type="checkbox" id="featured" name="featured"/>
+                <label for="featured">⭐ Jadikan Artikel Unggulan</label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Cover Image -->
+        <div class="form-card" style="margin-top:16px;">
+          <div class="section-heading">Gambar Sampul</div>
+          <div class="form-group">
+            <label for="image">URL Gambar</label>
+            <input type="url" id="image" name="image" placeholder="https://images.unsplash.com/..."/>
+            <span class="field-hint">Paste URL gambar dari Unsplash, CDN, atau hosting gambar</span>
+          </div>
+          <div class="image-preview" id="imagePreview">
+            <img id="previewImg" src="" alt="Preview"/>
+          </div>
+        </div>
+
+        <!-- Content -->
+        <div class="form-card" style="margin-top:16px;">
+          <div class="section-heading">Isi Artikel (HTML diperbolehkan)</div>
+          <div class="form-group full">
+            <label for="content">Konten</label>
+            <textarea id="content" name="content" class="content-area" placeholder="Tulis isi artikel di sini. Gunakan tag HTML seperti <p>, <h2>, <strong>, <ul>, <li> untuk formatting..."></textarea>
+            <span class="field-hint">Kosongkan untuk menggunakan ringkasan sebagai konten</span>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" id="publishBtn2" class="btn btn-primary">
+            <span class="spinner" id="spinner2"></span>
+            Publikasikan Artikel
+          </button>
+          <a href="/admin/dashboard" class="btn btn-secondary">Batal</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+  // Set default date to today
+  const dateInput = document.getElementById('date') as HTMLInputElement;
+  if (dateInput) dateInput.value = new Date().toISOString().split('T')[0];
+
+  // Auto-generate slug from title
+  const titleInput = document.getElementById('title') as HTMLInputElement;
+  const slugInput  = document.getElementById('slug')  as HTMLInputElement;
+  const slugVal    = document.getElementById('slugVal')!;
+
+  function generateSlug(str: string) {
+    return str.toLowerCase()
+      .replace(/[àáâãäå]/g,'a').replace(/[èéêë]/g,'e')
+      .replace(/[ìíîï]/g,'i').replace(/[òóôõö]/g,'o')
+      .replace(/[ùúûü]/g,'u').replace(/[ñ]/g,'n')
+      .replace(/[^a-z0-9\s-]/g,'')
+      .trim().replace(/\s+/g,'-').substring(0,120);
+  }
+
+  titleInput?.addEventListener('input', () => {
+    if (!slugInput.dataset.manual) {
+      const slug = generateSlug(titleInput.value);
+      slugInput.value = slug;
+      slugVal.textContent = slug || '—';
+    }
+  });
+
+  slugInput?.addEventListener('input', () => {
+    slugInput.dataset.manual = 'true';
+    slugVal.textContent = slugInput.value || '—';
+  });
+
+  // Image preview
+  const imageInput = document.getElementById('image') as HTMLInputElement;
+  const imagePreview = document.getElementById('imagePreview')!;
+  const previewImg   = document.getElementById('previewImg') as HTMLImageElement;
+  let previewTimer: ReturnType<typeof setTimeout>;
+
+  imageInput?.addEventListener('input', () => {
+    clearTimeout(previewTimer);
+    const url = imageInput.value.trim();
+    if (!url) { imagePreview.style.display = 'none'; return; }
+    previewTimer = setTimeout(() => {
+      previewImg.src = url;
+      previewImg.onload  = () => { imagePreview.style.display = 'block'; };
+      previewImg.onerror = () => { imagePreview.style.display = 'none'; };
+    }, 500);
+  });
+
+  // Toast helper
+  function showToast(msg: string, type: 'success' | 'error' = 'success') {
+    const toast = document.getElementById('toast')!;
+    toast.textContent = msg;
+    toast.className = `toast show ${type}`;
+    setTimeout(() => toast.classList.remove('show'), 3000);
+  }
+
+  // Submit handler
+  async function submitForm() {
+    const form = document.getElementById('articleForm') as HTMLFormElement;
+    const btn1 = document.getElementById('publishBtn') as HTMLButtonElement;
+    const btn2 = document.getElementById('publishBtn2') as HTMLButtonElement;
+    const sp1  = document.getElementById('spinner')!;
+    const sp2  = document.getElementById('spinner2')!;
+
+    const title    = (document.getElementById('title')    as HTMLInputElement).value.trim();
+    const excerpt  = (document.getElementById('excerpt')  as HTMLTextAreaElement).value.trim();
+    const category = (document.getElementById('category') as HTMLSelectElement).value;
+    const date     = (document.getElementById('date')     as HTMLInputElement).value;
+
+    if (!title || !excerpt || !category || !date) {
+      showToast('Isi semua field wajib: Judul, Ringkasan, Kategori, Tanggal', 'error');
+      return;
+    }
+
+    const payload = {
+      title,
+      excerpt,
+      content:   (document.getElementById('content')   as HTMLTextAreaElement).value.trim() || null,
+      category,
+      tag:       (document.getElementById('tag')       as HTMLInputElement).value.trim() || null,
+      date,
+      slug:      (document.getElementById('slug')      as HTMLInputElement).value.trim() || null,
+      image:     (document.getElementById('image')     as HTMLInputElement).value.trim() || null,
+      featured:  (document.getElementById('featured')  as HTMLInputElement).checked ? 1 : 0,
+      read_time: Number((document.getElementById('read_time') as HTMLInputElement).value) || 5,
+    };
+
+    [sp1, sp2].forEach(s => s.style.display = 'block');
+    [btn1, btn2].forEach(b => b.setAttribute('disabled', 'true'));
+
+    try {
+      const res = await fetch('/api/admin/articles', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        showToast('✅ Artikel berhasil dipublikasikan!');
+        setTimeout(() => {
+          window.location.href = `/admin/articles/${data.id}`;
+        }, 1200);
+      } else {
+        showToast(data.error || 'Gagal menyimpan artikel', 'error');
+      }
+    } catch (e) {
+      showToast('Terjadi kesalahan, coba lagi', 'error');
+    } finally {
+      [sp1, sp2].forEach(s => s.style.display = 'none');
+      [btn1, btn2].forEach(b => b.removeAttribute('disabled'));
+    }
+  }
+
+  document.getElementById('publishBtn')?.addEventListener('click', submitForm);
+  document.getElementById('publishBtn2')?.addEventListener('click', submitForm);
+
+  // Logout
+  document.getElementById('logoutBtn')?.addEventListener('click', async (e) => {
+    e.preventDefault();
+    await fetch('/api/admin/logout', { method: 'POST' });
+    window.location.href = '/admin';
+  });
+</script>
+</body>
+</html>

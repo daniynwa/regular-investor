@@ -1,0 +1,120 @@
+---
+interface Props {
+  featured: any[];
+  allArticles?: any[];
+}
+
+const { featured, allArticles = [] } = Astro.props;
+const heroMain = featured[0];
+const heroSecondary = featured[1] || allArticles[1];
+
+function formatDate(d: any) {
+  const date = d instanceof Date ? d : new Date(d);
+  return date.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+}
+---
+
+<section class="relative max-w-7xl mx-auto px-4 py-8">
+  <!-- Breaking news banner -->
+  <div class="flex items-center gap-3 mb-6 bg-[#151f2e] border border-[#1e2d3d] rounded-lg px-4 py-2.5 overflow-hidden">
+    <span class="flex-shrink-0 bg-red-500 text-white text-[10px] font-black tracking-widest uppercase px-2.5 py-1 rounded animate-pulse">TERKINI</span>
+    <div class="overflow-hidden flex-1">
+      <p class="text-sm text-slate-300 truncate">
+        {heroMain ? (
+          <a href={`/${heroMain.slug}`} class="hover:text-green-400 transition-colors">
+            {heroMain.title}
+          </a>
+        ) : 'Memuat berita terkini...'}
+      </p>
+    </div>
+  </div>
+
+  {heroMain && (
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+      <!-- Main featured -->
+      <a href={`/${heroMain.slug}`} class="lg:col-span-7 group relative overflow-hidden rounded-2xl card-hover block">
+        <div class="relative aspect-[16/9] overflow-hidden rounded-2xl">
+          <img
+            src={heroMain.image}
+            alt={heroMain.title}
+            class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+            loading="eager"
+            onerror="this.src='https://images.unsplash.com/photo-1611273426858-450d8e3c9fce?w=900&auto=format&fit=crop'"
+          />
+          <div class="absolute inset-0 bg-gradient-to-t from-[#0b1120] via-[#0b1120]/60 to-transparent"></div>
+          <div class="absolute bottom-0 left-0 right-0 p-6">
+            <div class="flex items-center gap-2 mb-3">
+              <span class="tag-badge bg-green-500/20 text-green-400 border border-green-500/30">{heroMain.category}</span>
+              <span class="tag-badge bg-blue-500/20 text-blue-400 border border-blue-500/30">{heroMain.tag}</span>
+            </div>
+            <h1 class="text-white font-bold text-xl md:text-2xl leading-snug mb-3 group-hover:text-green-300 transition-colors line-clamp-3">
+              {heroMain.title}
+            </h1>
+            <p class="text-slate-400 text-sm line-clamp-2 mb-4 hidden md:block">{heroMain.excerpt}</p>
+            <div class="flex items-center gap-3 text-xs text-slate-500">
+              <span>{formatDate(heroMain.date)}</span>
+              <span>·</span>
+              <span>{heroMain.read_time || heroMain.readTime || 3} menit baca</span>
+            </div>
+          </div>
+        </div>
+      </a>
+
+      <!-- Right column -->
+      <div class="lg:col-span-5 flex flex-col gap-4">
+        {heroSecondary && (
+          <a href={`/${heroSecondary.slug}`} class="group relative overflow-hidden rounded-2xl card-hover block flex-1">
+            <div class="relative h-52 overflow-hidden rounded-2xl">
+              <img
+                src={heroSecondary.image}
+                alt={heroSecondary.title}
+                class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                loading="eager"
+                onerror="this.src='https://images.unsplash.com/photo-1611068661401-69e7f82e1d5a?w=700&auto=format&fit=crop'"
+              />
+              <div class="absolute inset-0 bg-gradient-to-t from-[#0b1120] via-[#0b1120]/50 to-transparent"></div>
+              <div class="absolute bottom-0 left-0 right-0 p-4">
+                <span class="tag-badge bg-blue-500/20 text-blue-400 border border-blue-500/30 mb-2 inline-block">{heroSecondary.category}</span>
+                <h2 class="text-white font-semibold text-base leading-snug group-hover:text-green-300 transition-colors line-clamp-2">
+                  {heroSecondary.title}
+                </h2>
+              </div>
+            </div>
+          </a>
+        )}
+
+        <!-- Market snapshot -->
+        <div class="bg-[#151f2e] border border-[#1e2d3d] rounded-2xl p-4">
+          <div class="flex items-center justify-between mb-3">
+            <span class="text-xs font-bold text-slate-400 tracking-widest uppercase">Market Snapshot</span>
+            <span class="text-[10px] text-green-400 flex items-center gap-1">
+              <span class="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse inline-block"></span>Live
+            </span>
+          </div>
+          <div class="grid grid-cols-2 gap-2">
+            {[
+              { label: "IHSG",    val: "7,254",   chg: "+1.24%", up: true  },
+              { label: "USD/IDR", val: "16,245",  chg: "-0.31%", up: false },
+              { label: "Gold",    val: "$3,182",  chg: "+0.87%", up: true  },
+              { label: "Brent",   val: "$72.45",  chg: "-1.12%", up: false },
+            ].map(item => (
+              <div class="bg-[#0b1120] rounded-lg p-2.5">
+                <div class="text-[10px] text-slate-500 font-semibold tracking-wide uppercase mb-1">{item.label}</div>
+                <div class="text-sm font-bold text-slate-200">{item.val}</div>
+                <div class={`text-xs font-semibold mt-0.5 ${item.up ? 'text-green-400' : 'text-red-400'}`}>
+                  {item.up ? '▲' : '▼'} {item.chg}
+                </div>
+              </div>
+            ))}
+          </div>
+          <a href="/stock-insight" class="mt-3 flex items-center justify-center gap-1 text-xs text-green-400 hover:text-green-300 transition-colors">
+            Lihat semua pasar
+            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  )}
+</section>

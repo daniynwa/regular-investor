@@ -1,0 +1,542 @@
+---
+import Layout from '../layouts/Layout.astro';
+import TickerBar from '../components/TickerBar.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<Layout
+  title="Kalkulator Bunga Majemuk — Regular Investor"
+  description="Hitung pertumbuhan investasi dengan bunga majemuk. Visualisasikan potensi kekayaan Anda dengan kalkulator interaktif."
+>
+  <TickerBar />
+  <Header />
+
+  <main class="max-w-7xl mx-auto px-4 py-8">
+
+    <!-- Page header -->
+    <div class="mb-8">
+      <div class="flex items-center gap-2 mb-2">
+        <span class="tag-badge bg-green-500/15 text-green-400 border border-green-500/25">Tools</span>
+        <span class="tag-badge bg-blue-500/15 text-blue-400 border border-blue-500/25">Gratis</span>
+      </div>
+      <h1 class="text-2xl md:text-3xl font-black text-white mb-2">
+        Kalkulator <span class="gradient-text">Bunga Majemuk</span>
+      </h1>
+      <p class="text-slate-400 text-sm max-w-2xl">
+        Hitung potensi pertumbuhan investasi Anda dengan mempertimbangkan modal awal, kontribusi rutin,
+        tingkat bunga, dan frekuensi penggabungan bunga. Visualisasikan masa depan finansial Anda.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 xl:grid-cols-12 gap-6">
+
+      <!-- ── INPUT PANEL ──────────────────────────────────────────────────── -->
+      <div class="xl:col-span-4">
+        <div class="bg-[#151f2e] border border-[#1e2d3d] rounded-2xl p-6 sticky top-24">
+          <h2 class="text-sm font-bold text-white mb-5 flex items-center gap-2">
+            <span class="w-6 h-6 bg-green-500/20 rounded-lg flex items-center justify-center text-green-400 text-xs">⚙</span>
+            Parameter Investasi
+          </h2>
+
+          <!-- Step 1: Modal awal -->
+          <div class="mb-5">
+            <div class="flex items-center gap-2 mb-2">
+              <span class="w-5 h-5 rounded-full bg-green-500 text-black text-[10px] font-black flex items-center justify-center flex-shrink-0">1</span>
+              <label class="text-xs font-bold text-slate-300">Modal Awal (Rp)</label>
+            </div>
+            <div class="relative">
+              <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 text-sm font-semibold">Rp</span>
+              <input id="principal" type="number" value="10000000" min="0"
+                class="w-full bg-[#0b1120] border border-[#1e2d3d] focus:border-green-500/60 rounded-xl pl-10 pr-4 py-3 text-sm text-slate-200 outline-none transition-colors"/>
+            </div>
+            <input id="principalRange" type="range" min="0" max="1000000000" step="1000000" value="10000000"
+              class="w-full mt-2 accent-green-500 cursor-pointer"/>
+            <div class="flex justify-between text-[10px] text-slate-600 mt-0.5">
+              <span>Rp0</span><span>Rp1 M</span>
+            </div>
+          </div>
+
+          <!-- Step 2: Kontribusi bulanan -->
+          <div class="mb-5">
+            <div class="flex items-center gap-2 mb-2">
+              <span class="w-5 h-5 rounded-full bg-blue-500 text-white text-[10px] font-black flex items-center justify-center flex-shrink-0">2</span>
+              <label class="text-xs font-bold text-slate-300">Kontribusi Bulanan (Rp)</label>
+            </div>
+            <div class="relative">
+              <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 text-sm font-semibold">Rp</span>
+              <input id="monthly" type="number" value="500000" min="-100000000"
+                class="w-full bg-[#0b1120] border border-[#1e2d3d] focus:border-blue-500/60 rounded-xl pl-10 pr-4 py-3 text-sm text-slate-200 outline-none transition-colors"/>
+            </div>
+            <p class="text-[10px] text-slate-600 mt-1">Gunakan nilai negatif untuk simulasi penarikan rutin</p>
+            <input id="monthlyRange" type="range" min="0" max="10000000" step="100000" value="500000"
+              class="w-full mt-1 accent-blue-500 cursor-pointer"/>
+            <div class="flex justify-between text-[10px] text-slate-600 mt-0.5">
+              <span>Rp0</span><span>Rp10 jt</span>
+            </div>
+          </div>
+
+          <!-- Step 3: Jangka waktu -->
+          <div class="mb-5">
+            <div class="flex items-center gap-2 mb-2">
+              <span class="w-5 h-5 rounded-full bg-purple-500 text-white text-[10px] font-black flex items-center justify-center flex-shrink-0">3</span>
+              <label class="text-xs font-bold text-slate-300">Jangka Waktu (Tahun)</label>
+            </div>
+            <input id="years" type="number" value="10" min="1" max="50"
+              class="w-full bg-[#0b1120] border border-[#1e2d3d] focus:border-purple-500/60 rounded-xl px-4 py-3 text-sm text-slate-200 outline-none transition-colors"/>
+            <input id="yearsRange" type="range" min="1" max="50" step="1" value="10"
+              class="w-full mt-2 accent-purple-500 cursor-pointer"/>
+            <div class="flex justify-between text-[10px] text-slate-600 mt-0.5">
+              <span>1 thn</span><span>50 thn</span>
+            </div>
+          </div>
+
+          <!-- Step 4: Capital Gain -->
+          <div class="mb-5">
+            <div class="flex items-center gap-2 mb-2">
+              <span class="w-5 h-5 rounded-full bg-amber-500 text-black text-[10px] font-black flex items-center justify-center flex-shrink-0">4</span>
+              <label class="text-xs font-bold text-slate-300">Capital Gain Setiap Tahun (%)</label>
+            </div>
+            <div class="relative">
+              <input id="rate" type="number" value="10" min="0" max="100" step="0.1"
+                class="w-full bg-[#0b1120] border border-[#1e2d3d] focus:border-amber-500/60 rounded-xl px-4 pr-10 py-3 text-sm text-slate-200 outline-none transition-colors"/>
+              <span class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 text-sm font-semibold">%</span>
+            </div>
+            <input id="rateRange" type="range" min="0" max="30" step="0.5" value="10"
+              class="w-full mt-2 accent-amber-500 cursor-pointer"/>
+            <div class="flex justify-between text-[10px] text-slate-600 mt-0.5">
+              <span>0%</span><span>30%</span>
+            </div>
+          </div>
+
+          <!-- Step 5: Variance (opsional) -->
+          <div class="mb-5">
+            <div class="flex items-center justify-between mb-2">
+              <div class="flex items-center gap-2">
+                <span class="w-5 h-5 rounded-full bg-teal-500 text-black text-[10px] font-black flex items-center justify-center flex-shrink-0">5</span>
+                <label class="text-xs font-bold text-slate-300">Rentang Variasi</label>
+              </div>
+              <!-- Toggle checkbox -->
+              <label class="flex items-center gap-2 cursor-pointer group">
+                <span class="text-[10px] text-slate-500 group-hover:text-slate-300 transition-colors" id="varianceToggleLabel">Nonaktif</span>
+                <div class="relative">
+                  <input type="checkbox" id="varianceToggle" class="sr-only peer"/>
+                  <div class="w-9 h-5 bg-[#0b1120] border border-[#1e2d3d] rounded-full peer-checked:bg-teal-500/20 peer-checked:border-teal-500/40 transition-all"></div>
+                  <div class="absolute top-0.5 left-0.5 w-4 h-4 bg-slate-600 rounded-full peer-checked:bg-teal-400 peer-checked:translate-x-4 transition-all"></div>
+                </div>
+              </label>
+            </div>
+            <!-- Variance input — hidden by default -->
+            <div id="varianceInputWrap" class="hidden">
+              <div class="relative">
+                <input id="variance" type="number" value="2" min="0.5" max="10" step="0.5"
+                  class="w-full bg-[#0b1120] border border-[#1e2d3d] focus:border-teal-500/60 rounded-xl px-4 pr-10 py-3 text-sm text-slate-200 outline-none transition-colors"/>
+                <span class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 text-sm font-semibold">%</span>
+              </div>
+              <p class="text-[10px] text-slate-500 mt-1.5">Tampilkan skenario <span class="text-teal-400 font-semibold">+/−</span> dari capital gain utama</p>
+            </div>
+            <p id="varianceOffHint" class="text-[10px] text-slate-600 mt-1">Aktifkan untuk bandingkan beberapa skenario return</p>
+          </div>
+
+          <!-- Step 6: Frekuensi -->
+          <div class="mb-6">
+            <div class="flex items-center gap-2 mb-2">
+              <span class="w-5 h-5 rounded-full bg-rose-500 text-white text-[10px] font-black flex items-center justify-center flex-shrink-0">6</span>
+              <label class="text-xs font-bold text-slate-300">Frekuensi Penggabungan Bunga</label>
+            </div>
+            <div class="grid grid-cols-5 gap-1.5">
+              {[
+                { val: 1, label: "Tahunan" },
+                { val: 2, label: "Semest." },
+                { val: 4, label: "Kuartal" },
+                { val: 12, label: "Bulanan" },
+                { val: 365, label: "Harian" },
+              ].map((opt, i) => (
+                <button
+                  data-freq={opt.val}
+                  class={`freq-btn text-[10px] font-semibold py-2 rounded-lg border transition-all ${
+                    i === 3
+                      ? 'bg-rose-500/15 text-rose-400 border-rose-500/30'
+                      : 'bg-[#0b1120] text-slate-500 border-[#1e2d3d] hover:text-slate-300'
+                  }`}
+                >
+                  {opt.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <button id="calcBtn"
+            class="w-full bg-gradient-to-r from-green-500 to-teal-500 hover:from-green-400 hover:to-teal-400 text-black font-black py-3.5 rounded-xl transition-all text-sm tracking-wide shadow-lg shadow-green-500/20">
+            Hitung Sekarang →
+          </button>
+        </div>
+      </div>
+
+      <!-- ── OUTPUT PANEL ─────────────────────────────────────────────────── -->
+      <div class="xl:col-span-8 space-y-5">
+
+        <!-- Summary cards -->
+        <div id="summaryCards" class="grid grid-cols-2 md:grid-cols-4 gap-3">
+          <div class="bg-[#151f2e] border border-[#1e2d3d] rounded-2xl p-4 text-center">
+            <div class="text-[10px] text-slate-500 uppercase tracking-widest mb-1">Saldo Akhir</div>
+            <div class="text-xl font-black text-green-400" id="outFinal">—</div>
+          </div>
+          <div class="bg-[#151f2e] border border-[#1e2d3d] rounded-2xl p-4 text-center">
+            <div class="text-[10px] text-slate-500 uppercase tracking-widest mb-1">Modal Awal</div>
+            <div class="text-xl font-black text-blue-400" id="outPrincipal">—</div>
+          </div>
+          <div class="bg-[#151f2e] border border-[#1e2d3d] rounded-2xl p-4 text-center">
+            <div class="text-[10px] text-slate-500 uppercase tracking-widest mb-1">Total Kontribusi</div>
+            <div class="text-xl font-black text-purple-400" id="outContrib">—</div>
+          </div>
+          <div class="bg-[#151f2e] border border-[#1e2d3d] rounded-2xl p-4 text-center">
+            <div class="text-[10px] text-slate-500 uppercase tracking-widest mb-1">Total Bunga</div>
+            <div class="text-xl font-black text-amber-400" id="outInterest">—</div>
+          </div>
+        </div>
+
+        <!-- Chart -->
+        <div class="bg-[#151f2e] border border-[#1e2d3d] rounded-2xl p-5">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-sm font-bold text-white">Pertumbuhan Investasi per Tahun</h3>
+            <div class="flex items-center gap-3 text-[10px]">
+              <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-sm bg-blue-500 inline-block"></span>Modal</span>
+              <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-sm bg-purple-500 inline-block"></span>Kontribusi</span>
+              <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-sm bg-green-500 inline-block"></span>Bunga</span>
+            </div>
+          </div>
+          <div class="relative" style="height: 280px">
+            <canvas id="growthChart"></canvas>
+            <div id="chartPlaceholder" class="absolute inset-0 flex flex-col items-center justify-center text-slate-600">
+              <svg class="w-12 h-12 mb-2 opacity-30" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+              </svg>
+              <p class="text-sm">Masukkan parameter dan klik Hitung</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Rate variance comparison -->
+        <div id="varianceSection" class="hidden bg-[#151f2e] border border-[#1e2d3d] rounded-2xl p-5">
+          <h3 class="text-sm font-bold text-white mb-4">Perbandingan Skenario Suku Bunga</h3>
+          <div id="varianceCards" class="grid grid-cols-1 md:grid-cols-3 gap-3"></div>
+        </div>
+
+        <!-- Year-by-year table -->
+        <div id="tableSection" class="hidden bg-[#151f2e] border border-[#1e2d3d] rounded-2xl overflow-hidden">
+          <div class="flex items-center justify-between px-5 py-4 border-b border-[#1e2d3d]">
+            <h3 class="text-sm font-bold text-white">Tabel Pertumbuhan per Tahun</h3>
+            <span class="text-[10px] text-slate-500">Semua nilai dalam Rp</span>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-xs">
+              <thead>
+                <tr class="bg-[#0d1525] border-b border-[#1e2d3d]">
+                  <th class="text-left px-5 py-3 text-slate-500 font-semibold uppercase tracking-wider">Tahun</th>
+                  <th class="text-right px-4 py-3 text-slate-500 font-semibold uppercase tracking-wider">Kontribusi</th>
+                  <th class="text-right px-4 py-3 text-slate-500 font-semibold uppercase tracking-wider">Bunga</th>
+                  <th class="text-right px-5 py-3 text-slate-500 font-semibold uppercase tracking-wider">Saldo Akhir</th>
+                </tr>
+              </thead>
+              <tbody id="yearTable"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Tip card -->
+        <div class="bg-gradient-to-br from-[#0d2818]/60 to-[#0b1120] border border-green-500/15 rounded-2xl p-5">
+          <div class="flex gap-3">
+            <span class="text-xl flex-shrink-0">💡</span>
+            <div>
+              <p class="text-xs font-semibold text-green-400 mb-1">Kekuatan Bunga Majemuk</p>
+              <p class="text-xs text-slate-400 leading-relaxed">
+                Albert Einstein menyebut bunga majemuk sebagai "keajaiban dunia kedelapan." Semakin awal Anda mulai
+                berinvestasi, semakin besar efek compounding yang bekerja untuk Anda. Bahkan selisih 2% per tahun
+                bisa menghasilkan perbedaan ratusan juta rupiah dalam 20–30 tahun.
+              </p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <Footer />
+</Layout>
+
+<!-- Chart.js from CDN -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+<script>
+  // ── State ────────────────────────────────────────────────────────────────
+  let freq = 12;
+  let chart: any = null;
+
+  // ── Helpers ──────────────────────────────────────────────────────────────
+  const $ = (id: string) => document.getElementById(id) as HTMLInputElement;
+  const val = (id: string) => parseFloat(($(id) as HTMLInputElement).value) || 0;
+
+  function fmtRp(n: number): string {
+    if (Math.abs(n) >= 1e12) return 'Rp ' + (n / 1e12).toFixed(2) + ' T';
+    if (Math.abs(n) >= 1e9)  return 'Rp ' + (n / 1e9).toFixed(2)  + ' M';
+    if (Math.abs(n) >= 1e6)  return 'Rp ' + (n / 1e6).toFixed(2)  + ' jt';
+    return 'Rp ' + Math.round(n).toLocaleString('id-ID');
+  }
+
+  function fmtTable(n: number): string {
+    return Math.round(n).toLocaleString('id-ID');
+  }
+
+  // FV of lump sum + monthly contributions with compound interest
+  function calcYear(P: number, pmt: number, r: number, n: number, t: number) {
+    // n = compound freq per year, t = years
+    const rn = r / 100 / n;
+    const periods = n * t;
+    const fvP   = P * Math.pow(1 + rn, periods);
+    const fvPmt = rn > 0
+      ? pmt * ((Math.pow(1 + rn, periods) - 1) / rn)
+      : pmt * periods;
+    return fvP + fvPmt;
+  }
+
+  // Full year-by-year data
+  function calcSchedule(P: number, pmt: number, r: number, n: number, years: number) {
+    const rows = [];
+    for (let t = 1; t <= years; t++) {
+      const endBal = calcYear(P, pmt, r, n, t);
+      const totalContrib = pmt * n * t;          // monthly → n compound periods/yr
+      const totalContribActual = pmt * 12 * t;   // actual cash out per year
+      const interest = endBal - P - totalContribActual;
+      rows.push({ year: t, endBal, totalContrib: totalContribActual, interest });
+    }
+    return rows;
+  }
+
+  // ── Sync sliders ─────────────────────────────────────────────────────────
+  function syncSlider(inputId: string, rangeId: string) {
+    const inp = $(inputId) as HTMLInputElement;
+    const rng = $(rangeId) as HTMLInputElement;
+    inp.addEventListener('input', () => { rng.value = inp.value; calculate(); });
+    rng.addEventListener('input', () => { inp.value = rng.value; calculate(); });
+  }
+  syncSlider('principal', 'principalRange');
+  syncSlider('monthly', 'monthlyRange');
+  syncSlider('years', 'yearsRange');
+  syncSlider('rate', 'rateRange');
+
+  // ── Frequency buttons ────────────────────────────────────────────────────
+  document.querySelectorAll('.freq-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.freq-btn').forEach(b => {
+        b.className = 'freq-btn text-[10px] font-semibold py-2 rounded-lg border transition-all bg-[#0b1120] text-slate-500 border-[#1e2d3d] hover:text-slate-300';
+      });
+      btn.className = 'freq-btn text-[10px] font-semibold py-2 rounded-lg border transition-all bg-rose-500/15 text-rose-400 border-rose-500/30';
+      freq = parseInt((btn as HTMLElement).dataset.freq || '12');
+      calculate();
+    });
+  });
+
+  // ── Main calculate ────────────────────────────────────────────────────────
+  function calculate() {
+    const P       = val('principal');
+    const pmt     = val('monthly');
+    const years   = Math.max(1, Math.min(50, val('years')));
+    const r       = val('rate');
+    const varianceEnabled = (document.getElementById('varianceToggle') as HTMLInputElement)?.checked;
+    const variance = varianceEnabled ? val('variance') : 0;
+
+    const schedule = calcSchedule(P, pmt, r, freq, years);
+    const final = schedule[schedule.length - 1]?.endBal ?? 0;
+    const totalContrib = pmt * 12 * years;
+    const totalInterest = final - P - totalContrib;
+
+    // Summary cards
+    $('outFinal').textContent    = fmtRp(final);
+    $('outPrincipal').textContent = fmtRp(P);
+    $('outContrib').textContent  = fmtRp(totalContrib);
+    $('outInterest').textContent = fmtRp(totalInterest);
+
+    // Chart
+    renderChart(schedule, P, pmt);
+
+    // Year table
+    renderTable(schedule);
+
+    // Variance
+    if (variance > 0) {
+      renderVariance(P, pmt, r, freq, years, variance);
+    } else {
+      document.getElementById('varianceSection')!.classList.add('hidden');
+    }
+
+    // Hide placeholder
+    document.getElementById('chartPlaceholder')!.classList.add('hidden');
+    document.getElementById('tableSection')!.classList.remove('hidden');
+  }
+
+  // ── Chart ─────────────────────────────────────────────────────────────────
+  function renderChart(schedule: any[], P: number, pmt: number) {
+    const labels  = schedule.map(r => `Thn ${r.year}`);
+    const prinArr = schedule.map(() => P);
+    const ctbArr  = schedule.map(r => Math.max(0, pmt * 12 * r.year));
+    const intArr  = schedule.map(r => Math.max(0, r.endBal - P - pmt * 12 * r.year));
+
+    const ctx = (document.getElementById('growthChart') as HTMLCanvasElement).getContext('2d')!;
+
+    if (chart) chart.destroy();
+
+    chart = new (window as any).Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels,
+        datasets: [
+          {
+            label: 'Modal Awal',
+            data: prinArr,
+            backgroundColor: 'rgba(59,130,246,0.75)',
+            borderRadius: 4,
+            borderSkipped: false,
+          },
+          {
+            label: 'Total Kontribusi',
+            data: ctbArr,
+            backgroundColor: 'rgba(168,85,247,0.75)',
+            borderRadius: 0,
+            borderSkipped: false,
+          },
+          {
+            label: 'Bunga Majemuk',
+            data: intArr,
+            backgroundColor: 'rgba(34,197,94,0.85)',
+            borderRadius: { topLeft: 4, topRight: 4, bottomLeft: 0, bottomRight: 0 },
+            borderSkipped: false,
+          },
+        ],
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        interaction: { mode: 'index', intersect: false },
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            backgroundColor: '#111827',
+            borderColor: '#1e2d3d',
+            borderWidth: 1,
+            titleColor: '#94a3b8',
+            bodyColor: '#e2e8f0',
+            padding: 12,
+            callbacks: {
+              label: (ctx: any) => ` ${ctx.dataset.label}: ${fmtRp(ctx.raw)}`,
+            },
+          },
+        },
+        scales: {
+          x: {
+            stacked: true,
+            grid: { color: 'rgba(30,45,61,0.5)' },
+            ticks: { color: '#475569', font: { size: 10 } },
+          },
+          y: {
+            stacked: true,
+            grid: { color: 'rgba(30,45,61,0.5)' },
+            ticks: {
+              color: '#475569',
+              font: { size: 10 },
+              callback: (v: any) => fmtRp(v),
+            },
+          },
+        },
+      },
+    });
+  }
+
+  // ── Table ─────────────────────────────────────────────────────────────────
+  function renderTable(schedule: any[]) {
+    const tbody = document.getElementById('yearTable')!;
+    tbody.innerHTML = '';
+    schedule.forEach((row, i) => {
+      const tr = document.createElement('tr');
+      tr.className = `border-b border-[#1e2d3d] hover:bg-[#0d1525] transition-colors ${i % 2 === 1 ? 'bg-[#0b1120]/20' : ''}`;
+      const isUp = row.interest >= 0;
+      tr.innerHTML = `
+        <td class="px-5 py-3 font-semibold text-slate-300">Tahun ${row.year}</td>
+        <td class="px-4 py-3 text-right text-purple-300">${fmtTable(row.totalContrib)}</td>
+        <td class="px-4 py-3 text-right ${isUp ? 'text-green-400' : 'text-red-400'}">${fmtTable(row.interest)}</td>
+        <td class="px-5 py-3 text-right font-bold text-white">${fmtTable(row.endBal)}</td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  // ── Variance cards ────────────────────────────────────────────────────────
+  function renderVariance(P: number, pmt: number, r: number, n: number, years: number, v: number) {
+    const section = document.getElementById('varianceSection')!;
+    const container = document.getElementById('varianceCards')!;
+    section.classList.remove('hidden');
+    container.innerHTML = '';
+
+    const scenarios = [
+      { rate: r - v, label: `Pesimis (${(r - v).toFixed(1)}%)`, color: 'red' },
+      { rate: r,     label: `Utama (${r.toFixed(1)}%)`,          color: 'green' },
+      { rate: r + v, label: `Optimis (${(r + v).toFixed(1)}%)`,  color: 'blue' },
+    ];
+
+    scenarios.forEach(s => {
+      if (s.rate < 0) { container.innerHTML += `<div class="bg-[#0b1120] border border-[#1e2d3d] rounded-xl p-4 text-center"><p class="text-xs text-slate-500">Suku bunga tidak valid</p></div>`; return; }
+      const sched = calcSchedule(P, pmt, s.rate, n, years);
+      const final = sched[sched.length - 1]?.endBal ?? 0;
+      const totalC = pmt * 12 * years;
+      const totalI = final - P - totalC;
+      const pct = (P + totalC) > 0 ? (totalI / (P + totalC) * 100) : 0;
+
+      const colorMap: Record<string, string> = {
+        red:   'border-red-500/20 bg-red-500/5 text-red-400',
+        green: 'border-green-500/20 bg-green-500/5 text-green-400',
+        blue:  'border-blue-500/20 bg-blue-500/5 text-blue-400',
+      };
+      const cc = colorMap[s.color];
+
+      container.innerHTML += `
+        <div class="border ${cc} rounded-xl p-4 text-center">
+          <div class="text-[10px] font-bold uppercase tracking-widest mb-2 ${cc.split(' ')[2]}">${s.label}</div>
+          <div class="text-lg font-black text-white mb-1">${fmtRp(final)}</div>
+          <div class="text-xs text-slate-500 mb-2">Saldo akhir</div>
+          <div class="h-px bg-[#1e2d3d] mb-2"></div>
+          <div class="text-xs text-slate-400">Bunga: <span class="${cc.split(' ')[2]} font-semibold">${fmtRp(totalI)}</span></div>
+          <div class="text-[10px] text-slate-500 mt-0.5">ROI: ${pct.toFixed(1)}%</div>
+        </div>
+      `;
+    });
+  }
+
+  // ── Variance toggle ───────────────────────────────────────────────────────
+  const varianceToggle = document.getElementById('varianceToggle') as HTMLInputElement;
+  const varianceInputWrap = document.getElementById('varianceInputWrap')!;
+  const varianceOffHint  = document.getElementById('varianceOffHint')!;
+  const varianceLabel    = document.getElementById('varianceToggleLabel')!;
+
+  varianceToggle?.addEventListener('change', () => {
+    const on = varianceToggle.checked;
+    varianceInputWrap.classList.toggle('hidden', !on);
+    varianceOffHint.classList.toggle('hidden', on);
+    varianceLabel.textContent = on ? 'Aktif' : 'Nonaktif';
+    varianceLabel.className = on
+      ? 'text-[10px] text-teal-400 font-semibold transition-colors'
+      : 'text-[10px] text-slate-500 group-hover:text-slate-300 transition-colors';
+    calculate();
+  });
+
+  // ── Real-time on any input change ─────────────────────────────────────────
+  ['rate', 'variance', 'years'].forEach(id => {
+    $(id)?.addEventListener('input', calculate);
+  });
+
+  // ── Button ────────────────────────────────────────────────────────────────
+  document.getElementById('calcBtn')?.addEventListener('click', calculate);
+
+  // ── Auto-calculate on load ─────────────────────────────────────────────────
+  calculate();
+</script>

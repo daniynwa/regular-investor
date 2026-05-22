@@ -1,0 +1,15 @@
+---
+import CategoryPage from '../components/CategoryPage.astro';
+import { getArticlesByCategory } from '../lib/queries.js';
+
+let articles = [];
+try {
+  articles = await getArticlesByCategory('Investment');
+} catch {
+  const s = await import('../data/articles.js');
+  articles = s.articles.filter((a: any) => a.category === 'Investment');
+}
+---
+<CategoryPage category="Investment" label="Investment"
+  description="Analisis saham, dividen, emas, kripto, reksa dana, dan strategi investasi jangka panjang."
+  color="green" icon="💰" articles={articles} />

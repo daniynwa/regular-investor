@@ -1,0 +1,66 @@
+---
+---
+
+<section id="newsletter" class="max-w-7xl mx-auto px-4 py-10">
+  <div class="relative overflow-hidden bg-gradient-to-r from-[#0d2818] via-[#0d1a35] to-[#0d2818] border border-green-500/15 rounded-3xl p-8 md:p-12">
+
+    <!-- Background decorations -->
+    <div class="absolute top-0 left-0 w-64 h-64 bg-green-500/5 rounded-full -translate-x-1/2 -translate-y-1/2 pointer-events-none"></div>
+    <div class="absolute bottom-0 right-0 w-64 h-64 bg-blue-500/5 rounded-full translate-x-1/2 translate-y-1/2 pointer-events-none"></div>
+    <!-- SVG chart line decoration -->
+    <div class="absolute right-8 top-1/2 -translate-y-1/2 opacity-10 hidden md:block">
+      <svg width="200" height="80" viewBox="0 0 200 80" fill="none">
+        <polyline points="0,70 30,50 60,55 90,30 120,35 160,10 200,15" stroke="#22c55e" stroke-width="2" fill="none"/>
+        <circle cx="200" cy="15" r="3" fill="#22c55e"/>
+      </svg>
+    </div>
+
+    <div class="relative max-w-2xl mx-auto text-center">
+      <div class="inline-flex items-center gap-2 bg-green-500/10 border border-green-500/20 text-green-400 text-xs font-semibold px-4 py-1.5 rounded-full mb-5">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+        </svg>
+        Newsletter Gratis
+      </div>
+
+      <h2 class="text-2xl md:text-3xl font-black text-white mb-3 leading-tight">
+        Pantau Pasar Tanpa Harus<br>
+        <span class="gradient-text">Cek Berita Terus-Menerus</span>
+      </h2>
+      <p class="text-slate-400 text-sm md:text-base mb-8 max-w-md mx-auto">
+        Dapatkan ringkasan pasar, analisis investasi, dan berita penting setiap minggu langsung ke inbox Anda. Gratis selamanya.
+      </p>
+
+      <form class="flex flex-col sm:flex-row gap-3 max-w-md mx-auto" onsubmit="return false">
+        <input
+          type="email"
+          required
+          placeholder="Masukkan email Anda..."
+          class="flex-1 bg-[#0b1120] border border-[#1e2d3d] focus:border-green-500/50 rounded-xl px-4 py-3 text-sm text-slate-200 placeholder-slate-600 outline-none transition-colors"
+        />
+        <button
+          type="submit"
+          class="bg-green-500 hover:bg-green-400 active:bg-green-600 text-black font-bold text-sm px-6 py-3 rounded-xl transition-all duration-150 whitespace-nowrap"
+        >
+          Berlangganan →
+        </button>
+      </form>
+
+      <p class="text-xs text-slate-600 mt-4">Tidak ada spam. Bisa unsubscribe kapan saja.</p>
+
+      <!-- Social proof -->
+      <div class="flex items-center justify-center gap-6 mt-8 pt-6 border-t border-[#1e2d3d]">
+        {[
+          { icon: "📰", label: "8,500+ Pembaca" },
+          { icon: "📊", label: "Analisis Mingguan" },
+          { icon: "🔔", label: "Notifikasi Instan" },
+        ].map(item => (
+          <div class="flex items-center gap-1.5 text-xs text-slate-400">
+            <span>{item.icon}</span>
+            <span>{item.label}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>

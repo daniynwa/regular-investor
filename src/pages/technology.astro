@@ -1,0 +1,10 @@
+---
+import CategoryPage from '../components/CategoryPage.astro';
+import { getArticlesByCategory } from '../lib/queries.js';
+let articles = [];
+try { articles = await getArticlesByCategory('Technology'); }
+catch { const s = await import('../data/articles.js'); articles = s.articles.filter((a: any) => a.category === 'Technology'); }
+---
+<CategoryPage category="Technology" label="Technology"
+  description="Startup, fintech, AI, e-commerce, dan inovasi teknologi yang berdampak pada investasi dan ekonomi."
+  color="teal" icon="💻" articles={articles} />

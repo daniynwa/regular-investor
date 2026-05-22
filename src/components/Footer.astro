@@ -1,0 +1,121 @@
+---
+import { categories } from '../data/articles.js';
+---
+
+<footer class="bg-[#080f1c] border-t border-[#1e2d3d] mt-12">
+  <div class="max-w-7xl mx-auto px-4 py-12">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-10">
+
+      <!-- Brand column -->
+      <div class="lg:col-span-1">
+        <a href="/" class="flex items-center gap-2.5 mb-4">
+          <svg viewBox="0 0 40 40" class="w-9 h-9" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="20" cy="20" r="19" stroke="url(#footerLogoGrad)" stroke-width="2"/>
+            <rect x="10" y="24" width="4" height="8" rx="1" fill="#dc2626"/>
+            <rect x="16" y="19" width="4" height="13" rx="1" fill="#dc2626"/>
+            <rect x="22" y="14" width="4" height="18" rx="1" fill="#dc2626"/>
+            <path d="M9 28 Q20 8 33 10" stroke="url(#footerArrowGrad)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+            <path d="M29 7 L33 10 L30 14" stroke="#22c55e" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+            <defs>
+              <linearGradient id="footerLogoGrad" x1="0" y1="0" x2="40" y2="40">
+                <stop offset="0%" stop-color="#3b82f6"/>
+                <stop offset="100%" stop-color="#22c55e"/>
+              </linearGradient>
+              <linearGradient id="footerArrowGrad" x1="0" y1="0" x2="40" y2="0">
+                <stop offset="0%" stop-color="#3b82f6"/>
+                <stop offset="100%" stop-color="#22c55e"/>
+              </linearGradient>
+            </defs>
+          </svg>
+          <div>
+            <div>
+              <span class="gradient-text font-black text-lg">Regular</span>
+              <span class="text-white font-black text-lg"> Investor</span>
+            </div>
+            <div class="text-[9px] text-slate-600 tracking-widest uppercase">You Sleep & Makes Money</div>
+          </div>
+        </a>
+        <p class="text-xs text-slate-500 leading-relaxed mb-4">
+          Portal berita keuangan dan investasi terpercaya untuk investor Indonesia. Analisis mendalam, data pasar real-time, dan panduan investasi praktis.
+        </p>
+        <!-- Social links -->
+        <div class="flex items-center gap-2">
+          {[
+            { name: 'Facebook', href: '#', icon: 'M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z' },
+            { name: 'Twitter', href: '#', icon: 'M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z' },
+            { name: 'Instagram', href: '#', icon: 'M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37zm1.5-4.87h.01M6.5 20h11A2.5 2.5 0 0020 17.5v-11A2.5 2.5 0 0017.5 4h-11A2.5 2.5 0 004 6.5v11A2.5 2.5 0 006.5 20z' },
+            { name: 'YouTube', href: '#', icon: 'M22.54 6.42a2.78 2.78 0 00-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46a2.78 2.78 0 00-1.95 1.96A29 29 0 001 12a29 29 0 00.46 5.58A2.78 2.78 0 003.41 19.6C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 001.95-1.95A29 29 0 0023 12a29 29 0 00-.46-5.58z' },
+          ].map(s => (
+            <a href={s.href} aria-label={s.name} class="w-8 h-8 flex items-center justify-center bg-[#151f2e] hover:bg-green-500/15 border border-[#1e2d3d] hover:border-green-500/30 rounded-lg transition-all group">
+              <svg class="w-3.5 h-3.5 text-slate-500 group-hover:text-green-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d={s.icon}/>
+              </svg>
+            </a>
+          ))}
+          <!-- Telegram -->
+          <a href="#" aria-label="Telegram" class="w-8 h-8 flex items-center justify-center bg-[#151f2e] hover:bg-green-500/15 border border-[#1e2d3d] hover:border-green-500/30 rounded-lg transition-all group">
+            <svg class="w-3.5 h-3.5 text-slate-500 group-hover:text-green-400 transition-colors" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- Kategori -->
+      <div>
+        <h4 class="text-xs font-bold text-slate-300 tracking-widest uppercase mb-4">Kategori</h4>
+        <ul class="space-y-2">
+          {categories.map(cat => (
+            <li>
+              <a href={`/${cat.slug}`} class="text-sm text-slate-500 hover:text-green-400 transition-colors flex items-center gap-2">
+                <span class="text-sm">{cat.icon}</span>
+                {cat.name}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <!-- Tools -->
+      <div>
+        <h4 class="text-xs font-bold text-slate-300 tracking-widest uppercase mb-4">Tools</h4>
+        <ul class="space-y-2">
+          {['Kalkulator Dividen', 'Kalkulator DCA', 'Kalkulator Saham', 'Stock Screener', 'Kalkulator Emas', 'Jadwal Dividen'].map(item => (
+            <li>
+              <a href="/stock-insight" class="text-sm text-slate-500 hover:text-green-400 transition-colors">{item}</a>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <!-- About -->
+      <div>
+        <h4 class="text-xs font-bold text-slate-300 tracking-widest uppercase mb-4">Tentang Kami</h4>
+        <ul class="space-y-2">
+          {['Tentang Regular Investor', 'Redaksi', 'Karir', 'Advertise', 'Kebijakan Privasi', 'Pedoman Pemberitaan'].map(item => (
+            <li>
+              <a href="#" class="text-sm text-slate-500 hover:text-green-400 transition-colors">{item}</a>
+            </li>
+          ))}
+        </ul>
+        <!-- Disclaimer -->
+        <div class="mt-5 p-3 bg-amber-500/5 border border-amber-500/15 rounded-lg">
+          <p class="text-[10px] text-amber-500/70 leading-relaxed">
+            ⚠️ Konten di situs ini hanya untuk tujuan informasi dan bukan merupakan saran investasi.
+          </p>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Bottom bar -->
+    <div class="pt-6 border-t border-[#1e2d3d] flex flex-col sm:flex-row items-center justify-between gap-3">
+      <p class="text-xs text-slate-600">© 2026 Regular Investor. Semua hak dilindungi.</p>
+      <div class="flex items-center gap-4">
+        {['Privacy', 'Terms', 'Sitemap'].map(item => (
+          <a href="#" class="text-xs text-slate-600 hover:text-slate-400 transition-colors">{item}</a>
+        ))}
+      </div>
+    </div>
+  </div>
+</footer>

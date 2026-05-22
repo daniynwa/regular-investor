@@ -1,0 +1,243 @@
+---
+import { verifySession } from '../../lib/auth.js';
+import { getAllArticles, countArticles, countArticlesByCategory } from '../../lib/queries.js';
+
+const session = await verifySession(Astro.request);
+if (!session) return Astro.redirect('/admin');
+
+let articles: any[] = [];
+let total = 0;
+let stats: any[] = [];
+let dbOk = false;
+
+try {
+  [articles, total, stats] = await Promise.all([
+    getAllArticles({ limit: 20 }),
+    countArticles(),
+    countArticlesByCategory(),
+  ]);
+  dbOk = true;
+} catch (e) {
+  // DB not connected yet
+}
+
+const categoryColors: Record<string, string> = {
+  Economics: '#3b82f6', Investment: '#22c55e', Global: '#a855f7',
+  Nasional: '#ef4444', Technology: '#14b8a6', Business: '#f59e0b',
+};
+---
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard Admin — Regular Investor</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: #0b1120; color: #e2e8f0; font-family: 'Inter', sans-serif; min-height: 100vh; }
+    /* Layout */
+    .layout { display: flex; min-height: 100vh; }
+    /* Sidebar */
+    .sidebar { width: 220px; background: #080f1c; border-right: 1px solid #1e2d3d; padding: 20px 0; flex-shrink: 0; position: fixed; top: 0; left: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-logo { padding: 0 20px 24px; border-bottom: 1px solid #1e2d3d; }
+    .logo-brand { font-size: 16px; font-weight: 900; }
+    .logo-brand span { background: linear-gradient(135deg, #3b82f6, #22c55e); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .logo-sub { font-size: 9px; color: #475569; letter-spacing: 0.12em; text-transform: uppercase; margin-top: 2px; }
+    .nav-section { padding: 16px 20px 8px; font-size: 9px; font-weight: 700; color: #334155; letter-spacing: 0.12em; text-transform: uppercase; }
+    .nav-item { display: flex; align-items: center; gap: 10px; padding: 9px 20px; font-size: 13px; color: #64748b; text-decoration: none; transition: all 0.15s; }
+    .nav-item:hover, .nav-item.active { color: #22c55e; background: rgba(34,197,94,0.07); }
+    .nav-item.active { border-right: 2px solid #22c55e; }
+    /* Main */
+    .main { margin-left: 220px; flex: 1; }
+    .topbar { background: #0d1525; border-bottom: 1px solid #1e2d3d; padding: 14px 28px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 10; }
+    .topbar-title { font-size: 16px; font-weight: 800; color: #fff; }
+    .topbar-actions { display: flex; align-items: center; gap: 10px; }
+    .btn { padding: 8px 16px; border-radius: 10px; font-size: 12px; font-weight: 700; border: none; cursor: pointer; text-decoration: none; transition: all 0.15s; display: inline-flex; align-items: center; gap: 6px; font-family: inherit; }
+    .btn-primary { background: #22c55e; color: #000; }
+    .btn-primary:hover { background: #4ade80; }
+    .btn-secondary { background: #151f2e; color: #94a3b8; border: 1px solid #1e2d3d; }
+    .btn-secondary:hover { color: #e2e8f0; }
+    .btn-danger { background: rgba(239,68,68,0.1); color: #f87171; border: 1px solid rgba(239,68,68,0.2); }
+    .btn-danger:hover { background: rgba(239,68,68,0.2); }
+    .btn-sm { padding: 5px 10px; font-size: 11px; border-radius: 7px; }
+    .content { padding: 24px 28px; }
+    /* Stats */
+    .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
+    .stat-card { background: #151f2e; border: 1px solid #1e2d3d; border-radius: 14px; padding: 18px; }
+    .stat-label { font-size: 10px; color: #64748b; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 700; margin-bottom: 6px; }
+    .stat-value { font-size: 28px; font-weight: 900; }
+    .stat-sub { font-size: 11px; color: #475569; margin-top: 4px; }
+    /* Category pills */
+    .cat-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 24px; }
+    .cat-pill { background: #151f2e; border: 1px solid #1e2d3d; border-radius: 8px; padding: 6px 12px; font-size: 11px; display: flex; align-items: center; gap: 6px; }
+    .cat-dot { width: 8px; height: 8px; border-radius: 50%; }
+    /* Table */
+    .table-card { background: #151f2e; border: 1px solid #1e2d3d; border-radius: 16px; overflow: hidden; }
+    .table-header { padding: 16px 20px; border-bottom: 1px solid #1e2d3d; display: flex; align-items: center; justify-content: space-between; }
+    .table-header h2 { font-size: 14px; font-weight: 800; color: #fff; }
+    table { width: 100%; border-collapse: collapse; font-size: 12px; }
+    th { padding: 10px 16px; text-align: left; color: #475569; font-weight: 700; font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; background: #0d1525; border-bottom: 1px solid #1e2d3d; }
+    td { padding: 12px 16px; border-bottom: 1px solid #1e2d3d; color: #94a3b8; vertical-align: middle; }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: rgba(255,255,255,0.01); }
+    .td-title { color: #e2e8f0; font-weight: 500; max-width: 300px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .badge { display: inline-flex; padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; }
+    .featured-badge { background: rgba(34,197,94,0.12); color: #22c55e; border: 1px solid rgba(34,197,94,0.2); }
+    .actions { display: flex; gap: 6px; }
+    .db-warning { background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.2); border-radius: 12px; padding: 14px 18px; margin-bottom: 20px; font-size: 12px; color: #fbbf24; }
+    .search-bar { padding: 8px 14px; background: #0b1120; border: 1px solid #1e2d3d; border-radius: 10px; color: #e2e8f0; font-size: 12px; width: 220px; outline: none; font-family: inherit; }
+    .search-bar:focus { border-color: rgba(34,197,94,0.4); }
+  </style>
+</head>
+<body>
+<div class="layout">
+  <!-- Sidebar -->
+  <nav class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-brand"><span>Regular</span> Investor</div>
+      <div class="logo-sub">Admin Panel</div>
+    </div>
+    <div class="nav-section">Menu</div>
+    <a href="/admin/dashboard" class="nav-item active">📊 Dashboard</a>
+    <a href="/admin/articles/new" class="nav-item">✏️ Artikel Baru</a>
+    <div class="nav-section">Konten</div>
+    <a href="/admin/dashboard?cat=Economics"  class="nav-item">🏦 Economics</a>
+    <a href="/admin/dashboard?cat=Investment" class="nav-item">💰 Investment</a>
+    <a href="/admin/dashboard?cat=Nasional"   class="nav-item">🇮🇩 Nasional</a>
+    <a href="/admin/dashboard?cat=Global"     class="nav-item">🌍 Global</a>
+    <a href="/admin/dashboard?cat=Technology" class="nav-item">💻 Technology</a>
+    <div class="nav-section">Lainnya</div>
+    <a href="/" target="_blank" class="nav-item">🔗 Lihat Situs</a>
+    <a href="#" id="logoutBtn" class="nav-item">🚪 Keluar</a>
+  </nav>
+
+  <!-- Main content -->
+  <div class="main">
+    <div class="topbar">
+      <span class="topbar-title">Dashboard</span>
+      <div class="topbar-actions">
+        <input class="search-bar" type="search" id="searchInput" placeholder="🔍 Cari artikel..."/>
+        <a href="/admin/articles/new" class="btn btn-primary">+ Artikel Baru</a>
+      </div>
+    </div>
+
+    <div class="content">
+      {!dbOk && (
+        <div class="db-warning">
+          ⚠️ <strong>Database belum terhubung.</strong> Pastikan MySQL berjalan dan konfigurasi <code>.env</code> sudah benar. Jalankan <code>database/schema.sql</code> dan <code>database/seed.sql</code>.
+        </div>
+      )}
+
+      <!-- Stats -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-label">Total Artikel</div>
+          <div class="stat-value" style="color:#22c55e">{total}</div>
+          <div class="stat-sub">Di semua kategori</div>
+        </div>
+        {stats.slice(0, 3).map((s: any) => (
+          <div class="stat-card">
+            <div class="stat-label">{s.category}</div>
+            <div class="stat-value" style={`color:${categoryColors[s.category] || '#94a3b8'}`}>{s.total}</div>
+            <div class="stat-sub">Artikel</div>
+          </div>
+        ))}
+      </div>
+
+      <!-- Category stats -->
+      <div class="cat-grid">
+        {stats.map((s: any) => (
+          <div class="cat-pill">
+            <div class="cat-dot" style={`background:${categoryColors[s.category] || '#94a3b8'}`}></div>
+            <span style="color:#94a3b8">{s.category}</span>
+            <strong style="color:#e2e8f0">{s.total}</strong>
+          </div>
+        ))}
+      </div>
+
+      <!-- Articles table -->
+      <div class="table-card">
+        <div class="table-header">
+          <h2>Semua Artikel</h2>
+          <span style="font-size:11px; color:#475569">{articles.length} ditampilkan</span>
+        </div>
+        <table id="articlesTable">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Judul</th>
+              <th>Kategori</th>
+              <th>Tanggal</th>
+              <th>Featured</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody>
+            {articles.length === 0 && (
+              <tr><td colspan="6" style="text-align:center; color:#475569; padding:40px">Belum ada artikel di database</td></tr>
+            )}
+            {articles.map((a: any) => {
+              const date = a.date instanceof Date ? a.date : new Date(a.date);
+              const color = categoryColors[a.category] || '#94a3b8';
+              return (
+                <tr data-title={a.title.toLowerCase()} data-cat={a.category}>
+                  <td style="color:#475569">{a.id}</td>
+                  <td class="td-title">{a.title}</td>
+                  <td>
+                    <span class="badge" style={`background:${color}18; color:${color}; border:1px solid ${color}30`}>{a.category}</span>
+                  </td>
+                  <td>{date.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' })}</td>
+                  <td>{a.featured ? <span class="badge featured-badge">Ya</span> : <span style="color:#334155">—</span>}</td>
+                  <td>
+                    <div class="actions">
+                      <a href={`/admin/articles/${a.id}`} class="btn btn-secondary btn-sm">Edit</a>
+                      <a href={`/${a.slug}`} target="_blank" class="btn btn-secondary btn-sm">↗</a>
+                      <button class="btn btn-danger btn-sm delete-btn" data-id={a.id} data-title={a.title}>Hapus</button>
+                    </div>
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Logout
+  document.getElementById('logoutBtn')?.addEventListener('click', async (e) => {
+    e.preventDefault();
+    await fetch('/api/admin/logout', { method: 'POST' });
+    window.location.href = '/admin';
+  });
+
+  // Search filter
+  document.getElementById('searchInput')?.addEventListener('input', (e) => {
+    const q = (e.target as HTMLInputElement).value.toLowerCase();
+    document.querySelectorAll<HTMLTableRowElement>('#articlesTable tbody tr[data-title]').forEach(row => {
+      const match = row.dataset.title?.includes(q) || row.dataset.cat?.toLowerCase().includes(q);
+      row.style.display = match ? '' : 'none';
+    });
+  });
+
+  // Delete
+  document.querySelectorAll('.delete-btn').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const id = (btn as HTMLElement).dataset.id;
+      const title = (btn as HTMLElement).dataset.title;
+      if (!confirm(`Hapus artikel:\n"${title}"\n\nTindakan ini tidak bisa dibatalkan.`)) return;
+      const res = await fetch(`/api/admin/articles/${id}`, { method: 'DELETE' });
+      if (res.ok) {
+        btn.closest('tr')?.remove();
+      } else {
+        alert('Gagal menghapus artikel.');
+      }
+    });
+  });
+</script>
+</body>
+</html>

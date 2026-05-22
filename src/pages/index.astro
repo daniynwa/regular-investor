@@ -117,7 +117,7 @@ try {
         ].map(({ cat, color, href }) => {
           const catArticles = articles.filter(a => a.category === cat).slice(0, 3);
           if (!catArticles.length) return null;
-          const colorMap: Record<string, string> = {
+          const colorMap = {
             blue: 'from-blue-500 to-blue-400', green: 'from-green-500 to-green-400', purple: 'from-purple-500 to-purple-400',
           };
           const textMap: Record<string, string> = {

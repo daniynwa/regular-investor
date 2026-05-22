@@ -1,3 +1,7 @@
+import { webcrypto } from 'node:crypto';
+
+const crypto = webcrypto;
+
 const ADMIN_SECRET = import.meta.env.ADMIN_SECRET || 'change_this_secret';
 const ADMIN_PASSWORD = import.meta.env.ADMIN_PASSWORD || 'admin123';
 const COOKIE_NAME = 'ri_admin_session';

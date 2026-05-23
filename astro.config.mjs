@@ -8,5 +8,6 @@ export default defineConfig({
   adapter: node({ mode: 'standalone' }),
   vite: {
     plugins: [tailwindcss()],
+    envPrefix: ['PUBLIC_', 'DB_', 'ADMIN_'],
   },
 });

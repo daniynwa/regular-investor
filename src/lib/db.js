@@ -6,11 +6,11 @@ let pool;
 export function getPool() {
   if (!pool) {
     pool = mysql.createPool({
-      host:     import.meta.env.DB_HOST     || 'localhost',
-      port:     Number(import.meta.env.DB_PORT) || 3306,
-      user:     import.meta.env.DB_USER     || 'ri_user',
-      password: import.meta.env.DB_PASSWORD || '',
-      database: import.meta.env.DB_NAME     || 'regular_investor',
+      host:     process.env.DB_HOST     || import.meta.env.DB_HOST     || 'localhost',
+      port:     Number(process.env.DB_PORT || import.meta.env.DB_PORT) || 3306,
+      user:     process.env.DB_USER     || import.meta.env.DB_USER     || 'ri_user',
+      password: process.env.DB_PASSWORD || import.meta.env.DB_PASSWORD || '',
+      database: process.env.DB_NAME     || import.meta.env.DB_NAME     || 'regular_investor',
       waitForConnections: true,
       connectionLimit:    10,
       queueLimit:         0,

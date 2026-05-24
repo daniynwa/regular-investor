@@ -210,20 +210,10 @@ const fallbackParagraphs = [
               <span class="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse inline-block"></span>Live
             </span>
           </div>
-          {[
-            { label: 'IHSG',    val: '7,254.18', chg: '+1.24%', up: true  },
-            { label: 'USD/IDR', val: '16,245',   chg: '-0.31%', up: false },
-            { label: 'Gold',    val: '$3,182',   chg: '+0.87%', up: true  },
-            { label: 'BTC',     val: '$104,230', chg: '+2.34%', up: true  },
-          ].map(item => (
-            <div class="flex items-center justify-between py-1.5 border-b border-[#1e2d3d] last:border-0">
-              <span class="text-xs font-semibold text-slate-400">{item.label}</span>
-              <div class="text-right">
-                <div class="text-xs font-mono text-slate-300">{item.val}</div>
-                <div class={`text-[10px] font-semibold ${item.up ? 'text-green-400' : 'text-red-400'}`}>{item.up ? '▲' : '▼'} {item.chg}</div>
-              </div>
-            </div>
-          ))}
+          <div class="overflow-hidden rounded-lg">
+            <script type="module" src="https://widgets.tradingview-widget.com/w/en/tv-ticker-tape.js"></script>
+            <tv-ticker-tape symbols="FOREXCOM:SPXUSD,FOREXCOM:DJI,CMCMARKETS:GOLD,IDX:COMPOSITE" hide-chart color-theme="dark" is-transparent="true"></tv-ticker-tape>
+          </div>
         </div>
       </aside>
     </div>

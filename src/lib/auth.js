@@ -160,7 +160,11 @@ export function makeSessionCookie(token) {
 }
 
 export function clearSessionCookie() {
-  return `${COOKIE_NAME}=; Path=/; HttpOnly; Max-Age=0`;
+  // Clear both paths — old cookies used Path=/admin, new ones use Path=/
+  return [
+    `${COOKIE_NAME}=; Path=/; HttpOnly; Max-Age=0`,
+    `${COOKIE_NAME}=; Path=/admin; HttpOnly; Max-Age=0`,
+  ];
 }
 
 export { COOKIE_NAME };

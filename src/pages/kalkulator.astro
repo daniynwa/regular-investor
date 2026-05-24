@@ -6,8 +6,8 @@ import Footer from '../components/Footer.astro';
 ---
 
 <Layout
-  title="Kalkulator Bunga Majemuk — Regular Investor"
-  description="Hitung pertumbuhan investasi dengan bunga majemuk. Visualisasikan potensi kekayaan Anda dengan kalkulator interaktif."
+  title="Compound Interest Calculator — Regular Investor"
+  description="Kalkulator investasi lengkap: bunga majemuk, DCA, dividen, CAGR, dan dividend yield. Visualisasikan potensi kekayaan Anda."
 >
   <TickerBar />
   <Header />
@@ -21,15 +21,17 @@ import Footer from '../components/Footer.astro';
         <span class="tag-badge bg-blue-500/15 text-blue-400 border border-blue-500/25">Gratis</span>
       </div>
       <h1 class="text-2xl md:text-3xl font-black text-white mb-2">
-        Kalkulator <span class="gradient-text">Bunga Majemuk</span>
+        Compound Interest <span class="gradient-text">Calculator</span>
       </h1>
       <p class="text-slate-400 text-sm max-w-2xl">
-        Hitung potensi pertumbuhan investasi Anda dengan mempertimbangkan modal awal, kontribusi rutin,
-        tingkat bunga, dan frekuensi penggabungan bunga. Visualisasikan masa depan finansial Anda.
+        Kalkulator investasi lengkap — hitung bunga majemuk, DCA, dividen, CAGR, dan potensi pertumbuhan kekayaan Anda.
       </p>
     </div>
 
-    <div class="grid grid-cols-1 xl:grid-cols-12 gap-6">
+    <!-- ═══════════════════════════════════════════════════════════════════════ -->
+    <!-- SECTION 1: Advanced Bunga Majemuk Calculator (with chart) -->
+    <!-- ═══════════════════════════════════════════════════════════════════════ -->
+    <div class="grid grid-cols-1 xl:grid-cols-12 gap-6 mb-10">
 
       <!-- ── INPUT PANEL ──────────────────────────────────────────────────── -->
       <div class="xl:col-span-4">
@@ -116,7 +118,6 @@ import Footer from '../components/Footer.astro';
                 <span class="w-5 h-5 rounded-full bg-teal-500 text-black text-[10px] font-black flex items-center justify-center flex-shrink-0">5</span>
                 <label class="text-xs font-bold text-slate-300">Rentang Variasi</label>
               </div>
-              <!-- Toggle checkbox -->
               <label class="flex items-center gap-2 cursor-pointer group">
                 <span class="text-[10px] text-slate-500 group-hover:text-slate-300 transition-colors" id="varianceToggleLabel">Nonaktif</span>
                 <div class="relative">
@@ -126,7 +127,6 @@ import Footer from '../components/Footer.astro';
                 </div>
               </label>
             </div>
-            <!-- Variance input — hidden by default -->
             <div id="varianceInputWrap" class="hidden">
               <div class="relative">
                 <input id="variance" type="number" value="2" min="0.5" max="10" step="0.5"
@@ -261,6 +261,242 @@ import Footer from '../components/Footer.astro';
 
       </div>
     </div>
+
+    <!-- ═══════════════════════════════════════════════════════════════════════ -->
+    <!-- SECTION 2: Other Calculators Grid -->
+    <!-- ═══════════════════════════════════════════════════════════════════════ -->
+    <div class="mb-8">
+      <div class="flex items-center gap-3 mb-6">
+        <div class="w-1 h-6 bg-gradient-to-b from-blue-500 to-purple-500 rounded-full"></div>
+        <h2 class="text-lg font-bold text-white">Kalkulator Lainnya</h2>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-10">
+
+      <!-- Dividend Calculator -->
+      <div class="bg-[#151f2e] border border-[#1e2d3d] rounded-2xl p-6">
+        <div class="flex items-center gap-3 mb-5">
+          <div class="w-10 h-10 bg-green-500/15 rounded-xl flex items-center justify-center">
+            <svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+          </div>
+          <div>
+            <h2 class="text-base font-bold text-white">Kalkulator Dividen</h2>
+            <p class="text-xs text-slate-500">Hitung yield dan pendapatan dividen tahunan</p>
+          </div>
+        </div>
+        <div class="space-y-4" id="divCalc">
+          <div>
+            <label class="text-xs font-semibold text-slate-400 block mb-1.5">Harga Beli per Lembar (Rp)</label>
+            <input id="divPrice" type="number" placeholder="Contoh: 9850" value="9850" class="w-full bg-[#0b1120] border border-[#1e2d3d] focus:border-green-500/50 rounded-xl px-4 py-3 text-sm text-slate-200 outline-none transition-colors"/>
+          </div>
+          <div>
+            <label class="text-xs font-semibold text-slate-400 block mb-1.5">Jumlah Lembar Saham</label>
+            <input id="divShares" type="number" placeholder="Contoh: 1000" value="1000" class="w-full bg-[#0b1120] border border-[#1e2d3d] focus:border-green-500/50 rounded-xl px-4 py-3 text-sm text-slate-200 outline-none transition-colors"/>
+          </div>
+          <div>
+            <label class="text-xs font-semibold text-slate-400 block mb-1.5">Dividen per Lembar (Rp)</label>
+            <input id="divAmount" type="number" placeholder="Contoh: 200" value="200" class="w-full bg-[#0b1120] border border-[#1e2d3d] focus:border-green-500/50 rounded-xl px-4 py-3 text-sm text-slate-200 outline-none transition-colors"/>
+          </div>
+          <button id="calcDivBtn" class="w-full bg-green-500 hover:bg-green-400 text-black font-bold py-3 rounded-xl transition-all text-sm">Hitung Dividen</button>
+          <div id="divResult" class="hidden bg-[#0b1120] border border-green-500/20 rounded-xl p-4 space-y-2">
+            <div class="flex justify-between text-sm"><span class="text-slate-400">Total Investasi</span><span class="font-semibold text-white" id="divTotalInvest"></span></div>
+            <div class="flex justify-between text-sm"><span class="text-slate-400">Total Dividen Tahunan</span><span class="font-semibold text-green-400" id="divTotalDiv"></span></div>
+            <div class="flex justify-between text-sm border-t border-[#1e2d3d] pt-2"><span class="text-slate-400">Dividend Yield</span><span class="font-bold text-green-400 text-base" id="divYield"></span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DCA Calculator -->
+      <div class="bg-[#151f2e] border border-[#1e2d3d] rounded-2xl p-6">
+        <div class="flex items-center gap-3 mb-5">
+          <div class="w-10 h-10 bg-blue-500/15 rounded-xl flex items-center justify-center">
+            <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
+            </svg>
+          </div>
+          <div>
+            <h2 class="text-base font-bold text-white">Kalkulator DCA</h2>
+            <p class="text-xs text-slate-500">Dollar Cost Averaging — investasi rutin bulanan</p>
+          </div>
+        </div>
+        <div class="space-y-4">
+          <div>
+            <label class="text-xs font-semibold text-slate-400 block mb-1.5">Investasi Bulanan (Rp)</label>
+            <input id="dcaMonthly" type="number" placeholder="Contoh: 1000000" value="1000000" class="w-full bg-[#0b1120] border border-[#1e2d3d] focus:border-blue-500/50 rounded-xl px-4 py-3 text-sm text-slate-200 outline-none transition-colors"/>
+          </div>
+          <div>
+            <label class="text-xs font-semibold text-slate-400 block mb-1.5">Return Tahunan Estimasi (%)</label>
+            <input id="dcaReturn" type="number" placeholder="Contoh: 12" value="12" class="w-full bg-[#0b1120] border border-[#1e2d3d] focus:border-blue-500/50 rounded-xl px-4 py-3 text-sm text-slate-200 outline-none transition-colors"/>
+          </div>
+          <div>
+            <label class="text-xs font-semibold text-slate-400 block mb-1.5">Jangka Waktu (Tahun)</label>
+            <input id="dcaYears" type="number" placeholder="Contoh: 10" value="10" class="w-full bg-[#0b1120] border border-[#1e2d3d] focus:border-blue-500/50 rounded-xl px-4 py-3 text-sm text-slate-200 outline-none transition-colors"/>
+          </div>
+          <button id="calcDcaBtn" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-xl transition-all text-sm">Hitung DCA</button>
+          <div id="dcaResult" class="hidden bg-[#0b1120] border border-blue-500/20 rounded-xl p-4 space-y-2">
+            <div class="flex justify-between text-sm"><span class="text-slate-400">Total Investasi</span><span class="font-semibold text-white" id="dcaTotalInvest"></span></div>
+            <div class="flex justify-between text-sm"><span class="text-slate-400">Total Keuntungan</span><span class="font-semibold text-green-400" id="dcaProfit"></span></div>
+            <div class="flex justify-between text-sm border-t border-[#1e2d3d] pt-2"><span class="text-slate-400">Nilai Akhir Portofolio</span><span class="font-bold text-blue-400 text-base" id="dcaFinal"></span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CAGR Calculator -->
+      <div class="bg-[#151f2e] border border-[#1e2d3d] rounded-2xl p-6">
+        <div class="flex items-center gap-3 mb-5">
+          <div class="w-10 h-10 bg-amber-500/15 rounded-xl flex items-center justify-center">
+            <svg class="w-5 h-5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+            </svg>
+          </div>
+          <div>
+            <h2 class="text-base font-bold text-white">Kalkulator CAGR</h2>
+            <p class="text-xs text-slate-500">Hitung laju pertumbuhan majemuk tahunan</p>
+          </div>
+        </div>
+        <div class="space-y-4">
+          <div>
+            <label class="text-xs font-semibold text-slate-400 block mb-1.5">Nilai Awal (Rp)</label>
+            <input id="cagrStart" type="number" placeholder="Contoh: 10000000" value="10000000" class="w-full bg-[#0b1120] border border-[#1e2d3d] focus:border-amber-500/50 rounded-xl px-4 py-3 text-sm text-slate-200 outline-none transition-colors"/>
+          </div>
+          <div>
+            <label class="text-xs font-semibold text-slate-400 block mb-1.5">Nilai Akhir (Rp)</label>
+            <input id="cagrEnd" type="number" placeholder="Contoh: 25000000" value="25000000" class="w-full bg-[#0b1120] border border-[#1e2d3d] focus:border-amber-500/50 rounded-xl px-4 py-3 text-sm text-slate-200 outline-none transition-colors"/>
+          </div>
+          <div>
+            <label class="text-xs font-semibold text-slate-400 block mb-1.5">Jangka Waktu (Tahun)</label>
+            <input id="cagrYears" type="number" placeholder="Contoh: 5" value="5" class="w-full bg-[#0b1120] border border-[#1e2d3d] focus:border-amber-500/50 rounded-xl px-4 py-3 text-sm text-slate-200 outline-none transition-colors"/>
+          </div>
+          <button id="calcCAGRBtn" class="w-full bg-amber-500 hover:bg-amber-400 text-black font-bold py-3 rounded-xl transition-all text-sm">Hitung CAGR</button>
+          <div id="cagrResult" class="hidden bg-[#0b1120] border border-amber-500/20 rounded-xl p-4 space-y-2">
+            <div class="flex justify-between text-sm"><span class="text-slate-400">Total Return</span><span class="font-semibold text-amber-400" id="cagrTotalReturn"></span></div>
+            <div class="flex justify-between text-sm"><span class="text-slate-400">Return Absolut</span><span class="font-semibold text-white" id="cagrAbsReturn"></span></div>
+            <div class="flex justify-between text-sm border-t border-[#1e2d3d] pt-2"><span class="text-slate-400">CAGR</span><span class="font-bold text-amber-400 text-xl" id="cagrRate"></span></div>
+            <p class="text-[11px] text-slate-500 pt-1">Tingkat pertumbuhan majemuk tahunan rata-rata selama periode investasi</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dividend Yield Calculator -->
+      <div class="bg-[#151f2e] border border-[#1e2d3d] rounded-2xl p-6">
+        <div class="flex items-center gap-3 mb-5">
+          <div class="w-10 h-10 bg-teal-500/15 rounded-xl flex items-center justify-center">
+            <svg class="w-5 h-5 text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A2 2 0 013 12V7a2 2 0 012-2z"/>
+            </svg>
+          </div>
+          <div>
+            <h2 class="text-base font-bold text-white">Kalkulator Dividend Yield</h2>
+            <p class="text-xs text-slate-500">Forward yield, trailing yield & yield on cost</p>
+          </div>
+        </div>
+        <div class="space-y-4">
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="text-xs font-semibold text-slate-400 block mb-1.5">Harga Saat Ini (Rp)</label>
+              <input id="dyCurrentPrice" type="number" placeholder="Contoh: 9850" value="9850" class="w-full bg-[#0b1120] border border-[#1e2d3d] focus:border-teal-500/50 rounded-xl px-4 py-3 text-sm text-slate-200 outline-none transition-colors"/>
+            </div>
+            <div>
+              <label class="text-xs font-semibold text-slate-400 block mb-1.5">Harga Beli (Rp)</label>
+              <input id="dyBuyPrice" type="number" placeholder="Contoh: 7500" value="7500" class="w-full bg-[#0b1120] border border-[#1e2d3d] focus:border-teal-500/50 rounded-xl px-4 py-3 text-sm text-slate-200 outline-none transition-colors"/>
+            </div>
+          </div>
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="text-xs font-semibold text-slate-400 block mb-1.5">Dividen Tahun Lalu (Rp)</label>
+              <input id="dyTrailing" type="number" placeholder="Contoh: 340" value="340" class="w-full bg-[#0b1120] border border-[#1e2d3d] focus:border-teal-500/50 rounded-xl px-4 py-3 text-sm text-slate-200 outline-none transition-colors"/>
+            </div>
+            <div>
+              <label class="text-xs font-semibold text-slate-400 block mb-1.5">Estimasi Dividen Depan (Rp)</label>
+              <input id="dyForward" type="number" placeholder="Contoh: 380" value="380" class="w-full bg-[#0b1120] border border-[#1e2d3d] focus:border-teal-500/50 rounded-xl px-4 py-3 text-sm text-slate-200 outline-none transition-colors"/>
+            </div>
+          </div>
+          <div>
+            <label class="text-xs font-semibold text-slate-400 block mb-1.5">Jumlah Lembar Dimiliki</label>
+            <input id="dyShares" type="number" placeholder="Contoh: 1000" value="1000" class="w-full bg-[#0b1120] border border-[#1e2d3d] focus:border-teal-500/50 rounded-xl px-4 py-3 text-sm text-slate-200 outline-none transition-colors"/>
+          </div>
+          <button id="calcDyBtn" class="w-full bg-teal-500 hover:bg-teal-400 text-black font-bold py-3 rounded-xl transition-all text-sm">Hitung Dividend Yield</button>
+          <div id="dyResult" class="hidden bg-[#0b1120] border border-teal-500/20 rounded-xl p-4 space-y-3">
+            <div class="grid grid-cols-3 gap-2 pb-3 border-b border-[#1e2d3d]">
+              <div class="text-center"><div class="text-[10px] text-slate-500 mb-1">Trailing Yield</div><div class="text-lg font-black text-teal-400" id="dyTrailingYield"></div></div>
+              <div class="text-center"><div class="text-[10px] text-slate-500 mb-1">Forward Yield</div><div class="text-lg font-black text-teal-300" id="dyForwardYield"></div></div>
+              <div class="text-center"><div class="text-[10px] text-slate-500 mb-1">Yield on Cost</div><div class="text-lg font-black text-green-400" id="dyYOC"></div></div>
+            </div>
+            <div class="flex justify-between text-sm"><span class="text-slate-400">Pendapatan Dividen (Trailing)</span><span class="font-semibold text-white" id="dyIncomeTrailing"></span></div>
+            <div class="flex justify-between text-sm"><span class="text-slate-400">Pendapatan Dividen (Forward)</span><span class="font-semibold text-teal-400" id="dyIncomeForward"></span></div>
+            <div class="flex justify-between text-sm"><span class="text-slate-400">Capital Gain / Loss</span><span class="font-semibold" id="dyCapGain"></span></div>
+            <div class="flex justify-between text-sm border-t border-[#1e2d3d] pt-2"><span class="text-slate-400">Total Return (Trailing + CG)</span><span class="font-bold text-base" id="dyTotalReturn"></span></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════════════════ -->
+    <!-- SECTION 3: TradingView Live Market Data -->
+    <!-- ═══════════════════════════════════════════════════════════════════════ -->
+    <div class="bg-[#151f2e] border border-[#1e2d3d] rounded-2xl overflow-hidden">
+      <div class="flex items-center justify-between px-6 py-4 border-b border-[#1e2d3d]">
+        <h2 class="text-base font-bold text-white">Data Pasar Hari Ini</h2>
+        <span class="text-xs text-green-400 flex items-center gap-1.5">
+          <span class="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse inline-block"></span>
+          Live Data — TradingView
+        </span>
+      </div>
+      <div class="tradingview-widget-container" style="min-height: 500px;">
+        <div class="tradingview-widget-container__widget"></div>
+        <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-market-overview.js" async>
+        {
+          "colorTheme": "dark",
+          "dateRange": "1D",
+          "showChart": true,
+          "locale": "en",
+          "largeChartUrl": "",
+          "isTransparent": true,
+          "showSymbolLogo": true,
+          "showFloatingTooltip": true,
+          "width": "100%",
+          "height": "500",
+          "tabs": [
+            {
+              "title": "Saham IDX",
+              "symbols": [
+                { "s": "IDX:BBCA", "d": "BCA" },
+                { "s": "IDX:BBRI", "d": "BRI" },
+                { "s": "IDX:BMRI", "d": "Mandiri" },
+                { "s": "IDX:BBNI", "d": "BNI" },
+                { "s": "IDX:TLKM", "d": "Telkom" },
+                { "s": "IDX:ASII", "d": "Astra" },
+                { "s": "IDX:ANTM", "d": "Antam" },
+                { "s": "IDX:ADRO", "d": "Adaro" },
+                { "s": "IDX:GOTO", "d": "GoTo" },
+                { "s": "IDX:INCO", "d": "Vale Indo" },
+                { "s": "IDX:ICBP", "d": "Indofood CBP" },
+                { "s": "IDX:UNVR", "d": "Unilever" }
+              ],
+              "originalTitle": "Saham IDX"
+            },
+            {
+              "title": "Komoditas & Lainnya",
+              "symbols": [
+                { "s": "IDX:MDKA", "d": "Merdeka" },
+                { "s": "IDX:BRPT", "d": "Barito Pacific" },
+                { "s": "IDX:PTRO", "d": "Petrosea" },
+                { "s": "IDX:ENRG", "d": "Energi Mega" },
+                { "s": "IDX:MBMA", "d": "MBMA" },
+                { "s": "IDX:NCKL", "d": "Trimegah Bangun" }
+              ],
+              "originalTitle": "Komoditas & Lainnya"
+            }
+          ]
+        }
+        </script>
+      </div>
+    </div>
+
   </main>
 
   <Footer />
@@ -270,11 +506,12 @@ import Footer from '../components/Footer.astro';
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 
 <script>
-  // ── State ────────────────────────────────────────────────────────────────
+  // ══════════════════════════════════════════════════════════════════════════
+  // BUNGA MAJEMUK CALCULATOR (with chart & variance)
+  // ══════════════════════════════════════════════════════════════════════════
   let freq = 12;
   let chart: any = null;
 
-  // ── Helpers ──────────────────────────────────────────────────────────────
   const $ = (id: string) => document.getElementById(id) as HTMLInputElement;
   const val = (id: string) => parseFloat(($(id) as HTMLInputElement).value) || 0;
 
@@ -285,36 +522,27 @@ import Footer from '../components/Footer.astro';
     return 'Rp ' + Math.round(n).toLocaleString('id-ID');
   }
 
-  function fmtTable(n: number): string {
-    return Math.round(n).toLocaleString('id-ID');
-  }
+  function fmtTable(n: number): string { return Math.round(n).toLocaleString('id-ID'); }
 
-  // FV of lump sum + monthly contributions with compound interest
   function calcYear(P: number, pmt: number, r: number, n: number, t: number) {
-    // n = compound freq per year, t = years
     const rn = r / 100 / n;
     const periods = n * t;
     const fvP   = P * Math.pow(1 + rn, periods);
-    const fvPmt = rn > 0
-      ? pmt * ((Math.pow(1 + rn, periods) - 1) / rn)
-      : pmt * periods;
+    const fvPmt = rn > 0 ? pmt * ((Math.pow(1 + rn, periods) - 1) / rn) : pmt * periods;
     return fvP + fvPmt;
   }
 
-  // Full year-by-year data
   function calcSchedule(P: number, pmt: number, r: number, n: number, years: number) {
     const rows = [];
     for (let t = 1; t <= years; t++) {
       const endBal = calcYear(P, pmt, r, n, t);
-      const totalContrib = pmt * n * t;          // monthly → n compound periods/yr
-      const totalContribActual = pmt * 12 * t;   // actual cash out per year
+      const totalContribActual = pmt * 12 * t;
       const interest = endBal - P - totalContribActual;
       rows.push({ year: t, endBal, totalContrib: totalContribActual, interest });
     }
     return rows;
   }
 
-  // ── Sync sliders ─────────────────────────────────────────────────────────
   function syncSlider(inputId: string, rangeId: string) {
     const inp = $(inputId) as HTMLInputElement;
     const rng = $(rangeId) as HTMLInputElement;
@@ -326,7 +554,6 @@ import Footer from '../components/Footer.astro';
   syncSlider('years', 'yearsRange');
   syncSlider('rate', 'rateRange');
 
-  // ── Frequency buttons ────────────────────────────────────────────────────
   document.querySelectorAll('.freq-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       document.querySelectorAll('.freq-btn').forEach(b => {
@@ -338,122 +565,47 @@ import Footer from '../components/Footer.astro';
     });
   });
 
-  // ── Main calculate ────────────────────────────────────────────────────────
   function calculate() {
-    const P       = val('principal');
-    const pmt     = val('monthly');
-    const years   = Math.max(1, Math.min(50, val('years')));
-    const r       = val('rate');
+    const P = val('principal'), pmt = val('monthly');
+    const years = Math.max(1, Math.min(50, val('years'))), r = val('rate');
     const varianceEnabled = (document.getElementById('varianceToggle') as HTMLInputElement)?.checked;
     const variance = varianceEnabled ? val('variance') : 0;
-
     const schedule = calcSchedule(P, pmt, r, freq, years);
     const final = schedule[schedule.length - 1]?.endBal ?? 0;
     const totalContrib = pmt * 12 * years;
     const totalInterest = final - P - totalContrib;
-
-    // Summary cards
-    $('outFinal').textContent    = fmtRp(final);
+    $('outFinal').textContent = fmtRp(final);
     $('outPrincipal').textContent = fmtRp(P);
-    $('outContrib').textContent  = fmtRp(totalContrib);
+    $('outContrib').textContent = fmtRp(totalContrib);
     $('outInterest').textContent = fmtRp(totalInterest);
-
-    // Chart
     renderChart(schedule, P, pmt);
-
-    // Year table
     renderTable(schedule);
-
-    // Variance
-    if (variance > 0) {
-      renderVariance(P, pmt, r, freq, years, variance);
-    } else {
-      document.getElementById('varianceSection')!.classList.add('hidden');
-    }
-
-    // Hide placeholder
+    if (variance > 0) renderVariance(P, pmt, r, freq, years, variance);
+    else document.getElementById('varianceSection')!.classList.add('hidden');
     document.getElementById('chartPlaceholder')!.classList.add('hidden');
     document.getElementById('tableSection')!.classList.remove('hidden');
   }
 
-  // ── Chart ─────────────────────────────────────────────────────────────────
   function renderChart(schedule: any[], P: number, pmt: number) {
-    const labels  = schedule.map(r => `Thn ${r.year}`);
+    const labels = schedule.map(r => `Thn ${r.year}`);
     const prinArr = schedule.map(() => P);
-    const ctbArr  = schedule.map(r => Math.max(0, pmt * 12 * r.year));
-    const intArr  = schedule.map(r => Math.max(0, r.endBal - P - pmt * 12 * r.year));
-
+    const ctbArr = schedule.map(r => Math.max(0, pmt * 12 * r.year));
+    const intArr = schedule.map(r => Math.max(0, r.endBal - P - pmt * 12 * r.year));
     const ctx = (document.getElementById('growthChart') as HTMLCanvasElement).getContext('2d')!;
-
     if (chart) chart.destroy();
-
     chart = new (window as any).Chart(ctx, {
-      type: 'bar',
-      data: {
-        labels,
-        datasets: [
-          {
-            label: 'Modal Awal',
-            data: prinArr,
-            backgroundColor: 'rgba(59,130,246,0.75)',
-            borderRadius: 4,
-            borderSkipped: false,
-          },
-          {
-            label: 'Total Kontribusi',
-            data: ctbArr,
-            backgroundColor: 'rgba(168,85,247,0.75)',
-            borderRadius: 0,
-            borderSkipped: false,
-          },
-          {
-            label: 'Bunga Majemuk',
-            data: intArr,
-            backgroundColor: 'rgba(34,197,94,0.85)',
-            borderRadius: { topLeft: 4, topRight: 4, bottomLeft: 0, bottomRight: 0 },
-            borderSkipped: false,
-          },
-        ],
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        interaction: { mode: 'index', intersect: false },
-        plugins: {
-          legend: { display: false },
-          tooltip: {
-            backgroundColor: '#111827',
-            borderColor: '#1e2d3d',
-            borderWidth: 1,
-            titleColor: '#94a3b8',
-            bodyColor: '#e2e8f0',
-            padding: 12,
-            callbacks: {
-              label: (ctx: any) => ` ${ctx.dataset.label}: ${fmtRp(ctx.raw)}`,
-            },
-          },
-        },
-        scales: {
-          x: {
-            stacked: true,
-            grid: { color: 'rgba(30,45,61,0.5)' },
-            ticks: { color: '#475569', font: { size: 10 } },
-          },
-          y: {
-            stacked: true,
-            grid: { color: 'rgba(30,45,61,0.5)' },
-            ticks: {
-              color: '#475569',
-              font: { size: 10 },
-              callback: (v: any) => fmtRp(v),
-            },
-          },
-        },
+      type: 'bar', data: { labels, datasets: [
+        { label: 'Modal Awal', data: prinArr, backgroundColor: 'rgba(59,130,246,0.75)', borderRadius: 4, borderSkipped: false },
+        { label: 'Total Kontribusi', data: ctbArr, backgroundColor: 'rgba(168,85,247,0.75)', borderRadius: 0, borderSkipped: false },
+        { label: 'Bunga Majemuk', data: intArr, backgroundColor: 'rgba(34,197,94,0.85)', borderRadius: { topLeft: 4, topRight: 4, bottomLeft: 0, bottomRight: 0 }, borderSkipped: false },
+      ]},
+      options: { responsive: true, maintainAspectRatio: false, interaction: { mode: 'index', intersect: false },
+        plugins: { legend: { display: false }, tooltip: { backgroundColor: '#111827', borderColor: '#1e2d3d', borderWidth: 1, titleColor: '#94a3b8', bodyColor: '#e2e8f0', padding: 12, callbacks: { label: (ctx: any) => ` ${ctx.dataset.label}: ${fmtRp(ctx.raw)}` } } },
+        scales: { x: { stacked: true, grid: { color: 'rgba(30,45,61,0.5)' }, ticks: { color: '#475569', font: { size: 10 } } }, y: { stacked: true, grid: { color: 'rgba(30,45,61,0.5)' }, ticks: { color: '#475569', font: { size: 10 }, callback: (v: any) => fmtRp(v) } } },
       },
     });
   }
 
-  // ── Table ─────────────────────────────────────────────────────────────────
   function renderTable(schedule: any[]) {
     const tbody = document.getElementById('yearTable')!;
     tbody.innerHTML = '';
@@ -461,82 +613,127 @@ import Footer from '../components/Footer.astro';
       const tr = document.createElement('tr');
       tr.className = `border-b border-[#1e2d3d] hover:bg-[#0d1525] transition-colors ${i % 2 === 1 ? 'bg-[#0b1120]/20' : ''}`;
       const isUp = row.interest >= 0;
-      tr.innerHTML = `
-        <td class="px-5 py-3 font-semibold text-slate-300">Tahun ${row.year}</td>
-        <td class="px-4 py-3 text-right text-purple-300">${fmtTable(row.totalContrib)}</td>
-        <td class="px-4 py-3 text-right ${isUp ? 'text-green-400' : 'text-red-400'}">${fmtTable(row.interest)}</td>
-        <td class="px-5 py-3 text-right font-bold text-white">${fmtTable(row.endBal)}</td>
-      `;
+      tr.innerHTML = `<td class="px-5 py-3 font-semibold text-slate-300">Tahun ${row.year}</td><td class="px-4 py-3 text-right text-purple-300">${fmtTable(row.totalContrib)}</td><td class="px-4 py-3 text-right ${isUp ? 'text-green-400' : 'text-red-400'}">${fmtTable(row.interest)}</td><td class="px-5 py-3 text-right font-bold text-white">${fmtTable(row.endBal)}</td>`;
       tbody.appendChild(tr);
     });
   }
 
-  // ── Variance cards ────────────────────────────────────────────────────────
   function renderVariance(P: number, pmt: number, r: number, n: number, years: number, v: number) {
     const section = document.getElementById('varianceSection')!;
     const container = document.getElementById('varianceCards')!;
     section.classList.remove('hidden');
     container.innerHTML = '';
-
     const scenarios = [
       { rate: r - v, label: `Pesimis (${(r - v).toFixed(1)}%)`, color: 'red' },
-      { rate: r,     label: `Utama (${r.toFixed(1)}%)`,          color: 'green' },
-      { rate: r + v, label: `Optimis (${(r + v).toFixed(1)}%)`,  color: 'blue' },
+      { rate: r, label: `Utama (${r.toFixed(1)}%)`, color: 'green' },
+      { rate: r + v, label: `Optimis (${(r + v).toFixed(1)}%)`, color: 'blue' },
     ];
-
     scenarios.forEach(s => {
       if (s.rate < 0) { container.innerHTML += `<div class="bg-[#0b1120] border border-[#1e2d3d] rounded-xl p-4 text-center"><p class="text-xs text-slate-500">Suku bunga tidak valid</p></div>`; return; }
       const sched = calcSchedule(P, pmt, s.rate, n, years);
       const final = sched[sched.length - 1]?.endBal ?? 0;
-      const totalC = pmt * 12 * years;
-      const totalI = final - P - totalC;
+      const totalC = pmt * 12 * years, totalI = final - P - totalC;
       const pct = (P + totalC) > 0 ? (totalI / (P + totalC) * 100) : 0;
-
-      const colorMap = {
-        red:   'border-red-500/20 bg-red-500/5 text-red-400',
-        green: 'border-green-500/20 bg-green-500/5 text-green-400',
-        blue:  'border-blue-500/20 bg-blue-500/5 text-blue-400',
-      };
+      const colorMap: Record<string, string> = { red: 'border-red-500/20 bg-red-500/5 text-red-400', green: 'border-green-500/20 bg-green-500/5 text-green-400', blue: 'border-blue-500/20 bg-blue-500/5 text-blue-400' };
       const cc = colorMap[s.color];
-
-      container.innerHTML += `
-        <div class="border ${cc} rounded-xl p-4 text-center">
-          <div class="text-[10px] font-bold uppercase tracking-widest mb-2 ${cc.split(' ')[2]}">${s.label}</div>
-          <div class="text-lg font-black text-white mb-1">${fmtRp(final)}</div>
-          <div class="text-xs text-slate-500 mb-2">Saldo akhir</div>
-          <div class="h-px bg-[#1e2d3d] mb-2"></div>
-          <div class="text-xs text-slate-400">Bunga: <span class="${cc.split(' ')[2]} font-semibold">${fmtRp(totalI)}</span></div>
-          <div class="text-[10px] text-slate-500 mt-0.5">ROI: ${pct.toFixed(1)}%</div>
-        </div>
-      `;
+      container.innerHTML += `<div class="border ${cc} rounded-xl p-4 text-center"><div class="text-[10px] font-bold uppercase tracking-widest mb-2 ${cc.split(' ')[2]}">${s.label}</div><div class="text-lg font-black text-white mb-1">${fmtRp(final)}</div><div class="text-xs text-slate-500 mb-2">Saldo akhir</div><div class="h-px bg-[#1e2d3d] mb-2"></div><div class="text-xs text-slate-400">Bunga: <span class="${cc.split(' ')[2]} font-semibold">${fmtRp(totalI)}</span></div><div class="text-[10px] text-slate-500 mt-0.5">ROI: ${pct.toFixed(1)}%</div></div>`;
     });
   }
 
-  // ── Variance toggle ───────────────────────────────────────────────────────
   const varianceToggle = document.getElementById('varianceToggle') as HTMLInputElement;
   const varianceInputWrap = document.getElementById('varianceInputWrap')!;
-  const varianceOffHint  = document.getElementById('varianceOffHint')!;
-  const varianceLabel    = document.getElementById('varianceToggleLabel')!;
-
+  const varianceOffHint = document.getElementById('varianceOffHint')!;
+  const varianceLabel = document.getElementById('varianceToggleLabel')!;
   varianceToggle?.addEventListener('change', () => {
     const on = varianceToggle.checked;
     varianceInputWrap.classList.toggle('hidden', !on);
     varianceOffHint.classList.toggle('hidden', on);
     varianceLabel.textContent = on ? 'Aktif' : 'Nonaktif';
-    varianceLabel.className = on
-      ? 'text-[10px] text-teal-400 font-semibold transition-colors'
-      : 'text-[10px] text-slate-500 group-hover:text-slate-300 transition-colors';
+    varianceLabel.className = on ? 'text-[10px] text-teal-400 font-semibold transition-colors' : 'text-[10px] text-slate-500 group-hover:text-slate-300 transition-colors';
     calculate();
   });
+  ['rate', 'variance', 'years'].forEach(id => { $(id)?.addEventListener('input', calculate); });
+  document.getElementById('calcBtn')?.addEventListener('click', calculate);
+  calculate();
 
-  // ── Real-time on any input change ─────────────────────────────────────────
-  ['rate', 'variance', 'years'].forEach(id => {
-    $(id)?.addEventListener('input', calculate);
+  // ══════════════════════════════════════════════════════════════════════════
+  // OTHER CALCULATORS
+  // ══════════════════════════════════════════════════════════════════════════
+  const fmt = (n: number) => 'Rp ' + Math.round(n).toLocaleString('id-ID');
+
+  // Dividend calculator
+  document.getElementById('calcDivBtn')?.addEventListener('click', () => {
+    const price = parseFloat((document.getElementById('divPrice') as HTMLInputElement).value) || 0;
+    const shares = parseFloat((document.getElementById('divShares') as HTMLInputElement).value) || 0;
+    const divAmt = parseFloat((document.getElementById('divAmount') as HTMLInputElement).value) || 0;
+    const totalInvest = price * shares, totalDiv = divAmt * shares;
+    const yield_ = totalInvest > 0 ? (totalDiv / totalInvest * 100) : 0;
+    (document.getElementById('divTotalInvest') as HTMLElement).textContent = fmt(totalInvest);
+    (document.getElementById('divTotalDiv') as HTMLElement).textContent = fmt(totalDiv);
+    (document.getElementById('divYield') as HTMLElement).textContent = yield_.toFixed(2) + '%';
+    document.getElementById('divResult')?.classList.remove('hidden');
   });
 
-  // ── Button ────────────────────────────────────────────────────────────────
-  document.getElementById('calcBtn')?.addEventListener('click', calculate);
+  // CAGR calculator
+  document.getElementById('calcCAGRBtn')?.addEventListener('click', () => {
+    const start = parseFloat((document.getElementById('cagrStart') as HTMLInputElement).value) || 0;
+    const end = parseFloat((document.getElementById('cagrEnd') as HTMLInputElement).value) || 0;
+    const t = parseFloat((document.getElementById('cagrYears') as HTMLInputElement).value) || 1;
+    const cagr = (Math.pow(end / start, 1 / t) - 1) * 100;
+    const totalReturn = ((end - start) / start) * 100;
+    const absReturn = end - start;
+    const up = absReturn >= 0;
+    (document.getElementById('cagrTotalReturn') as HTMLElement).textContent = totalReturn.toFixed(2) + '%';
+    (document.getElementById('cagrTotalReturn') as HTMLElement).className = `font-semibold ${up ? 'text-amber-400' : 'text-red-400'}`;
+    (document.getElementById('cagrAbsReturn') as HTMLElement).textContent = (up ? '+' : '') + fmt(absReturn);
+    (document.getElementById('cagrAbsReturn') as HTMLElement).className = `font-semibold ${up ? 'text-white' : 'text-red-400'}`;
+    (document.getElementById('cagrRate') as HTMLElement).textContent = cagr.toFixed(2) + '%';
+    (document.getElementById('cagrRate') as HTMLElement).className = `font-bold text-xl ${up ? 'text-amber-400' : 'text-red-400'}`;
+    document.getElementById('cagrResult')?.classList.remove('hidden');
+  });
 
-  // ── Auto-calculate on load ─────────────────────────────────────────────────
-  calculate();
+  // Dividend Yield calculator
+  document.getElementById('calcDyBtn')?.addEventListener('click', () => {
+    const currentPrice = parseFloat((document.getElementById('dyCurrentPrice') as HTMLInputElement).value) || 0;
+    const buyPrice = parseFloat((document.getElementById('dyBuyPrice') as HTMLInputElement).value) || 0;
+    const trailing = parseFloat((document.getElementById('dyTrailing') as HTMLInputElement).value) || 0;
+    const forward = parseFloat((document.getElementById('dyForward') as HTMLInputElement).value) || 0;
+    const shares = parseFloat((document.getElementById('dyShares') as HTMLInputElement).value) || 0;
+    const trailingYield = currentPrice > 0 ? (trailing / currentPrice) * 100 : 0;
+    const forwardYield = currentPrice > 0 ? (forward / currentPrice) * 100 : 0;
+    const yoc = buyPrice > 0 ? (trailing / buyPrice) * 100 : 0;
+    const incomeT = trailing * shares, incomeF = forward * shares;
+    const capGain = (currentPrice - buyPrice) * shares;
+    const totalReturn = incomeT + capGain;
+    const totalReturnPct = buyPrice > 0 ? ((currentPrice - buyPrice + trailing) / buyPrice) * 100 : 0;
+    const upCG = capGain >= 0, upTR = totalReturn >= 0;
+    (document.getElementById('dyTrailingYield') as HTMLElement).textContent = trailingYield.toFixed(2) + '%';
+    (document.getElementById('dyForwardYield') as HTMLElement).textContent = forwardYield.toFixed(2) + '%';
+    (document.getElementById('dyYOC') as HTMLElement).textContent = yoc.toFixed(2) + '%';
+    (document.getElementById('dyIncomeTrailing') as HTMLElement).textContent = fmt(incomeT);
+    (document.getElementById('dyIncomeForward') as HTMLElement).textContent = fmt(incomeF);
+    const cgEl = document.getElementById('dyCapGain')!;
+    cgEl.textContent = (upCG ? '+' : '') + fmt(capGain);
+    cgEl.className = `font-semibold ${upCG ? 'text-green-400' : 'text-red-400'}`;
+    const trEl = document.getElementById('dyTotalReturn')!;
+    trEl.textContent = (upTR ? '+' : '') + fmt(totalReturn) + ` (${totalReturnPct.toFixed(2)}%)`;
+    trEl.className = `font-bold text-base ${upTR ? 'text-teal-400' : 'text-red-400'}`;
+    document.getElementById('dyResult')?.classList.remove('hidden');
+  });
+
+  // DCA calculator
+  document.getElementById('calcDcaBtn')?.addEventListener('click', () => {
+    const monthly = parseFloat((document.getElementById('dcaMonthly') as HTMLInputElement).value) || 0;
+    const annualReturn = parseFloat((document.getElementById('dcaReturn') as HTMLInputElement).value) || 0;
+    const years = parseFloat((document.getElementById('dcaYears') as HTMLInputElement).value) || 0;
+    const months = years * 12;
+    const r = annualReturn / 100 / 12;
+    const fv = r > 0 ? monthly * ((Math.pow(1 + r, months) - 1) / r) : monthly * months;
+    const totalInvest = monthly * months;
+    const profit = fv - totalInvest;
+    (document.getElementById('dcaTotalInvest') as HTMLElement).textContent = fmt(totalInvest);
+    (document.getElementById('dcaProfit') as HTMLElement).textContent = fmt(profit);
+    (document.getElementById('dcaFinal') as HTMLElement).textContent = fmt(fv);
+    document.getElementById('dcaResult')?.classList.remove('hidden');
+  });
 </script>

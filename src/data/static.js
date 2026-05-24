@@ -16,13 +16,12 @@ export const marketData = [
 ];
 
 export const categories = [
-  { name: "Stock Insight", slug: "stock-insight", icon: "📈", color: "amber"  },
+  { name: "Compound Interest Calculator", slug: "kalkulator", icon: "📈", color: "amber" },
   { name: "Economics",     slug: "economics",     icon: "🏦", color: "blue"   },
   { name: "Investment",    slug: "investment",    icon: "💰", color: "green"  },
   { name: "Nasional",      slug: "nasional",      icon: "🇮🇩", color: "red"   },
   { name: "Global",        slug: "global",        icon: "🌍", color: "purple" },
   { name: "Technology",    slug: "technology",    icon: "💻", color: "teal"   },
-  { name: "Kalkulator",    slug: "kalkulator",    icon: "🧮", color: "green"  },
 ];
 
 export const liveMarket = [

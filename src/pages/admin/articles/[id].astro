@@ -33,6 +33,7 @@ const dateStr = article?.date
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Edit Artikel — Admin</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet"/>
+  <link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body { background: #0b1120; color: #e2e8f0; font-family: 'Inter', sans-serif; min-height: 100vh; }
@@ -72,7 +73,20 @@ const dateStr = article?.date
     }
     input:focus, select:focus, textarea:focus { border-color: rgba(34,197,94,0.4); }
     textarea { resize: vertical; min-height: 120px; }
-    textarea.content-area { min-height: 400px; font-size: 12px; line-height: 1.7; }
+    
+    /* Quill dark mode overrides */
+    .ql-toolbar.ql-snow { border: 1px solid #1e2d3d !important; border-top-left-radius: 10px; border-top-right-radius: 10px; background: #0d1525; }
+    .ql-container.ql-snow { border: 1px solid #1e2d3d !important; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px; min-height: 400px; font-family: inherit !important; font-size: 13px !important; background: #0b1120; }
+    .ql-snow .ql-stroke { stroke: #94a3b8; }
+    .ql-snow .ql-fill, .ql-snow .ql-stroke.ql-fill { fill: #94a3b8; }
+    .ql-snow.ql-toolbar button:hover .ql-stroke, .ql-snow .ql-toolbar button:hover .ql-stroke { stroke: #22c55e; }
+    .ql-snow.ql-toolbar button:hover .ql-fill, .ql-snow .ql-toolbar button:hover .ql-fill { fill: #22c55e; }
+    .ql-snow.ql-toolbar button.ql-active .ql-stroke, .ql-snow .ql-toolbar button.ql-active .ql-stroke { stroke: #22c55e; }
+    .ql-snow.ql-toolbar button.ql-active .ql-fill, .ql-snow .ql-toolbar button.ql-active .ql-fill { fill: #22c55e; }
+    .ql-snow .ql-picker { color: #94a3b8; }
+    .ql-snow .ql-picker-options { background-color: #151f2e; border: 1px solid #1e2d3d; }
+    .ql-editor p { margin-bottom: 1em; }
+
     select option { background: #0b1120; }
     .checkbox-row { display: flex; align-items: center; gap: 10px; padding: 10px 0; }
     .checkbox-row input[type="checkbox"] { width: 16px; height: 16px; accent-color: #22c55e; cursor: pointer; }
@@ -215,11 +229,12 @@ const dateStr = article?.date
         </div>
 
         <div class="form-card" style="margin-top:16px;">
-          <div class="section-heading">Isi Artikel (HTML diperbolehkan)</div>
+          <div class="section-heading">Isi Artikel</div>
           <div class="form-group full">
             <label for="content">Konten</label>
-            <textarea id="content" name="content" class="content-area">{article?.content || ''}</textarea>
-            <span class="field-hint">Kosongkan untuk menggunakan ringkasan sebagai konten</span>
+            <textarea id="content" name="content" style="display:none;">{article?.content || ''}</textarea>
+            <div id="editor-container"></div>
+            <span class="field-hint">Kosongkan untuk menggunakan ringkasan sebagai konten. Header 1 (H1) otomatis dari Judul Artikel. Gunakan Header 2/3 untuk sub-judul.</span>
           </div>
         </div>
 
@@ -238,6 +253,7 @@ const dateStr = article?.date
 
 <div class="toast" id="toast"></div>
 
+<script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
 <script define:vars={{ articleId: article?.id, articleSlug: article?.slug }}>
   // Slug live preview
   const slugInput = document.getElementById('slug');
@@ -245,6 +261,26 @@ const dateStr = article?.date
   slugInput?.addEventListener('input', () => {
     slugVal.textContent = slugInput.value || '—';
   });
+
+  // Init Quill
+  const quill = new Quill('#editor-container', {
+    theme: 'snow',
+    modules: {
+      toolbar: [
+        [{ 'header': [2, 3, false] }],
+        ['bold', 'italic', 'underline', 'strike'],
+        [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+        ['blockquote', 'code-block', 'link'],
+        ['clean']
+      ]
+    }
+  });
+
+  // Load existing content
+  const contentInput = document.getElementById('content');
+  if (contentInput.value) {
+    quill.root.innerHTML = contentInput.value;
+  }
 
   // Image preview
   const imageInput   = document.getElementById('image');
@@ -288,10 +324,12 @@ const dateStr = article?.date
       return;
     }
 
+    const contentHtml = quill.root.innerHTML === '<p><br></p>' ? '' : quill.root.innerHTML.trim();
+
     const payload = {
       title,
       excerpt,
-      content:   document.getElementById('content').value.trim() || null,
+      content:   contentHtml || null,
       category,
       tag:       document.getElementById('tag').value.trim() || null,
       date,

@@ -1,30 +1,38 @@
 ---
-import { marketData } from '../data/articles.js';
+// TradingView Ticker Widget - Live data from IDX stocks
 ---
 
-<div class="bg-[#0d1525] border-b border-[#1e2d3d] overflow-hidden">
-  <div class="flex items-center">
-    <!-- Label -->
-    <div class="flex-shrink-0 bg-green-500 text-black text-[11px] font-800 font-black tracking-widest uppercase px-3 py-2 z-10">
-      LIVE
-    </div>
-    <!-- Scrolling ticker -->
-    <div class="overflow-hidden flex-1 relative">
-      <div class="flex ticker-scroll whitespace-nowrap">
-        {[...marketData, ...marketData].map((item) => (
-          <span class="inline-flex items-center gap-2 px-5 py-2 text-xs border-r border-[#1e2d3d]">
-            <span class="font-semibold text-slate-300">{item.symbol}</span>
-            <span class="text-slate-400">{item.value}</span>
-            <span class={`font-semibold ${item.up ? 'text-green-400' : 'text-red-400'}`}>
-              {item.up ? '▲' : '▼'} {item.change}
-            </span>
-          </span>
-        ))}
-      </div>
-    </div>
-    <!-- Date -->
-    <div class="flex-shrink-0 hidden md:flex items-center gap-2 px-4 text-[11px] text-slate-500 border-l border-[#1e2d3d]">
-      <span>22 Mei 2026</span>
-    </div>
-  </div>
+<!-- TradingView Widget BEGIN -->
+<div class="tradingview-widget-container" style="background: #0d1525; border-bottom: 1px solid #1e2d3d;">
+  <div class="tradingview-widget-container__widget"></div>
+  <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-tickers.js" async>
+  {
+    "symbols": [
+      { "proName": "IDX:BBCA", "title": "BBCA" },
+      { "proName": "IDX:BBRI", "title": "BBRI" },
+      { "proName": "IDX:ANTM", "title": "ANTM" },
+      { "proName": "IDX:BMRI", "title": "BMRI" },
+      { "proName": "IDX:MDKA", "title": "MDKA" },
+      { "proName": "IDX:BRPT", "title": "BRPT" },
+      { "proName": "IDX:ADRO", "title": "ADRO" },
+      { "proName": "IDX:PTRO", "title": "PTRO" },
+      { "proName": "IDX:TLKM", "title": "TLKM" },
+      { "proName": "IDX:BBNI", "title": "BBNI" },
+      { "proName": "IDX:ENRG", "title": "ENRG" },
+      { "proName": "IDX:MBMA", "title": "MBMA" },
+      { "proName": "IDX:INCO", "title": "INCO" },
+      { "proName": "IDX:GOTO", "title": "GOTO" },
+      { "proName": "IDX:ASII", "title": "ASII" },
+      { "proName": "IDX:ICBP", "title": "ICBP" },
+      { "proName": "IDX:UNVR", "title": "UNVR" },
+      { "proName": "IDX:NCKL", "title": "NCKL" }
+    ],
+    "colorTheme": "dark",
+    "locale": "en",
+    "largeChartUrl": "",
+    "isTransparent": true,
+    "showSymbolLogo": true
+  }
+  </script>
 </div>
+<!-- TradingView Widget END -->

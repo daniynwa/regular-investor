@@ -1,5 +1,22 @@
 ---
 import { categories } from '../data/articles.js';
+import { getSocialLinks } from '../lib/queries.js';
+
+let socialLinks = {
+  social_facebook: '', social_twitter: '', social_instagram: '',
+  social_youtube: '', social_telegram: '',
+};
+try {
+  socialLinks = await getSocialLinks();
+} catch {}
+
+const socialItems = [
+  { name: 'Facebook', href: socialLinks.social_facebook, icon: 'M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z', fill: false },
+  { name: 'Twitter', href: socialLinks.social_twitter, icon: 'M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z', fill: false },
+  { name: 'Instagram', href: socialLinks.social_instagram, icon: 'M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37zm1.5-4.87h.01M6.5 20h11A2.5 2.5 0 0020 17.5v-11A2.5 2.5 0 0017.5 4h-11A2.5 2.5 0 004 6.5v11A2.5 2.5 0 006.5 20z', fill: false },
+  { name: 'YouTube', href: socialLinks.social_youtube, icon: 'M22.54 6.42a2.78 2.78 0 00-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46a2.78 2.78 0 00-1.95 1.96A29 29 0 001 12a29 29 0 00.46 5.58A2.78 2.78 0 003.41 19.6C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 001.95-1.95A29 29 0 0023 12a29 29 0 00-.46-5.58z', fill: false },
+];
+const telegramHref = socialLinks.social_telegram;
 ---
 
 <footer class="bg-[#080f1c] border-t border-[#1e2d3d] mt-12">
@@ -38,22 +55,17 @@ import { categories } from '../data/articles.js';
         <p class="text-xs text-slate-500 leading-relaxed mb-4">
           Portal berita keuangan dan investasi terpercaya untuk investor Indonesia. Analisis mendalam, data pasar real-time, dan panduan investasi praktis.
         </p>
-        <!-- Social links -->
+        <!-- Social links — driven by admin settings -->
         <div class="flex items-center gap-2">
-          {[
-            { name: 'Facebook', href: '#', icon: 'M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z' },
-            { name: 'Twitter', href: '#', icon: 'M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z' },
-            { name: 'Instagram', href: '#', icon: 'M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37zm1.5-4.87h.01M6.5 20h11A2.5 2.5 0 0020 17.5v-11A2.5 2.5 0 0017.5 4h-11A2.5 2.5 0 004 6.5v11A2.5 2.5 0 006.5 20z' },
-            { name: 'YouTube', href: '#', icon: 'M22.54 6.42a2.78 2.78 0 00-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46a2.78 2.78 0 00-1.95 1.96A29 29 0 001 12a29 29 0 00.46 5.58A2.78 2.78 0 003.41 19.6C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 001.95-1.95A29 29 0 0023 12a29 29 0 00-.46-5.58z' },
-          ].map(s => (
-            <a href={s.href} aria-label={s.name} class="w-8 h-8 flex items-center justify-center bg-[#151f2e] hover:bg-green-500/15 border border-[#1e2d3d] hover:border-green-500/30 rounded-lg transition-all group">
+          {socialItems.map(s => (
+            <a href={s.href || '#'} aria-label={s.name} target={s.href ? '_blank' : undefined} rel={s.href ? 'noopener noreferrer' : undefined} class={`w-8 h-8 flex items-center justify-center bg-[#151f2e] hover:bg-green-500/15 border border-[#1e2d3d] hover:border-green-500/30 rounded-lg transition-all group ${!s.href ? 'opacity-40' : ''}`}>
               <svg class="w-3.5 h-3.5 text-slate-500 group-hover:text-green-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d={s.icon}/>
               </svg>
             </a>
           ))}
           <!-- Telegram -->
-          <a href="#" aria-label="Telegram" class="w-8 h-8 flex items-center justify-center bg-[#151f2e] hover:bg-green-500/15 border border-[#1e2d3d] hover:border-green-500/30 rounded-lg transition-all group">
+          <a href={telegramHref || '#'} aria-label="Telegram" target={telegramHref ? '_blank' : undefined} rel={telegramHref ? 'noopener noreferrer' : undefined} class={`w-8 h-8 flex items-center justify-center bg-[#151f2e] hover:bg-green-500/15 border border-[#1e2d3d] hover:border-green-500/30 rounded-lg transition-all group ${!telegramHref ? 'opacity-40' : ''}`}>
             <svg class="w-3.5 h-3.5 text-slate-500 group-hover:text-green-400 transition-colors" fill="currentColor" viewBox="0 0 24 24">
               <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
             </svg>
@@ -80,9 +92,9 @@ import { categories } from '../data/articles.js';
       <div>
         <h4 class="text-xs font-bold text-slate-300 tracking-widest uppercase mb-4">Tools</h4>
         <ul class="space-y-2">
-          {['Kalkulator Dividen', 'Kalkulator DCA', 'Kalkulator Saham', 'Stock Screener', 'Kalkulator Emas', 'Jadwal Dividen'].map(item => (
+          {['Kalkulator Dividen', 'Kalkulator DCA', 'Kalkulator Compounding', 'Kalkulator CAGR', 'Kalkulator Bunga Majemuk', 'Kalkulator Dividend Yield'].map(item => (
             <li>
-              <a href="/stock-insight" class="text-sm text-slate-500 hover:text-green-400 transition-colors">{item}</a>
+              <a href="/kalkulator" class="text-sm text-slate-500 hover:text-green-400 transition-colors">{item}</a>
             </li>
           ))}
         </ul>

@@ -95,3 +95,38 @@ export async function countArticlesByCategory() {
     `SELECT category, COUNT(*) as total FROM articles GROUP BY category ORDER BY total DESC`
   );
 }
+
+// ── Site Settings ────────────────────────────────────────────────────────────
+
+export async function getSocialLinks() {
+  const defaults = {
+    social_facebook: '',
+    social_twitter: '',
+    social_instagram: '',
+    social_youtube: '',
+    social_telegram: '',
+  };
+  try {
+    const rows = await query(
+      `SELECT setting_key, setting_value FROM site_settings WHERE setting_key LIKE 'social_%'`
+    );
+    const links = { ...defaults };
+    rows.forEach((row) => {
+      if (row.setting_key in links) {
+        links[row.setting_key] = row.setting_value || '';
+      }
+    });
+    return links;
+  } catch {
+    return defaults;
+  }
+}
+
+export async function updateSetting(key, value) {
+  return query(
+    `INSERT INTO site_settings (setting_key, setting_value) VALUES (?, ?)
+     ON DUPLICATE KEY UPDATE setting_value = VALUES(setting_value)`,
+    [key, value]
+  );
+}
+

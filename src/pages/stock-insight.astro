@@ -336,47 +336,64 @@ import Footer from '../components/Footer.astro';
 
     </div>
 
-    <!-- Market data table -->
+    <!-- Live Market Data - TradingView Widget -->
     <div class="mt-8 bg-[#151f2e] border border-[#1e2d3d] rounded-2xl overflow-hidden">
       <div class="flex items-center justify-between px-6 py-4 border-b border-[#1e2d3d]">
         <h2 class="text-base font-bold text-white">Data Pasar Hari Ini</h2>
         <span class="text-xs text-green-400 flex items-center gap-1.5">
           <span class="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse inline-block"></span>
-          Live Data
+          Live Data — TradingView
         </span>
       </div>
-      <div class="overflow-x-auto">
-        <table class="w-full text-sm">
-          <thead>
-            <tr class="border-b border-[#1e2d3d] bg-[#0d1525]">
-              <th class="text-left px-6 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">Instrumen</th>
-              <th class="text-right px-6 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">Harga</th>
-              <th class="text-right px-6 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">Perubahan</th>
-              <th class="text-right px-6 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider hidden md:table-cell">Volume</th>
-            </tr>
-          </thead>
-          <tbody>
-            {[
-              { name: "IHSG", price: "7,254.18", chg: "+1.24%", vol: "28.4B", up: true },
-              { name: "BBCA", price: "9,850", chg: "+0.51%", vol: "182.3M", up: true },
-              { name: "TLKM", price: "3,120", chg: "-0.64%", vol: "94.1M", up: false },
-              { name: "ASII", price: "4,780", chg: "+1.08%", vol: "67.8M", up: true },
-              { name: "BMRI", price: "6,250", chg: "+0.80%", vol: "143.2M", up: true },
-              { name: "GOTO", price: "74", chg: "-2.63%", vol: "1.2B", up: false },
-              { name: "ANTM", price: "1,680", chg: "+2.44%", vol: "312.5M", up: true },
-              { name: "INCO", price: "3,890", chg: "-1.27%", vol: "45.6M", up: false },
-            ].map((row, i) => (
-              <tr class={`border-b border-[#1e2d3d] hover:bg-[#0d1525] transition-colors ${i % 2 === 0 ? '' : 'bg-[#0b1120]/30'}`}>
-                <td class="px-6 py-3.5 font-semibold text-slate-200">{row.name}</td>
-                <td class="px-6 py-3.5 text-right font-mono text-slate-300">{row.price}</td>
-                <td class={`px-6 py-3.5 text-right font-semibold ${row.up ? 'text-green-400' : 'text-red-400'}`}>
-                  {row.up ? '▲' : '▼'} {row.chg}
-                </td>
-                <td class="px-6 py-3.5 text-right text-slate-500 hidden md:table-cell">{row.vol}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+      <!-- TradingView Market Overview Widget -->
+      <div class="tradingview-widget-container" style="min-height: 500px;">
+        <div class="tradingview-widget-container__widget"></div>
+        <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-market-overview.js" async>
+        {
+          "colorTheme": "dark",
+          "dateRange": "1D",
+          "showChart": true,
+          "locale": "en",
+          "largeChartUrl": "",
+          "isTransparent": true,
+          "showSymbolLogo": true,
+          "showFloatingTooltip": true,
+          "width": "100%",
+          "height": "500",
+          "tabs": [
+            {
+              "title": "Saham IDX",
+              "symbols": [
+                { "s": "IDX:BBCA", "d": "BCA" },
+                { "s": "IDX:BBRI", "d": "BRI" },
+                { "s": "IDX:BMRI", "d": "Mandiri" },
+                { "s": "IDX:BBNI", "d": "BNI" },
+                { "s": "IDX:TLKM", "d": "Telkom" },
+                { "s": "IDX:ASII", "d": "Astra" },
+                { "s": "IDX:ANTM", "d": "Antam" },
+                { "s": "IDX:ADRO", "d": "Adaro" },
+                { "s": "IDX:GOTO", "d": "GoTo" },
+                { "s": "IDX:INCO", "d": "Vale Indo" },
+                { "s": "IDX:ICBP", "d": "Indofood CBP" },
+                { "s": "IDX:UNVR", "d": "Unilever" }
+              ],
+              "originalTitle": "Saham IDX"
+            },
+            {
+              "title": "Komoditas & Lainnya",
+              "symbols": [
+                { "s": "IDX:MDKA", "d": "Merdeka" },
+                { "s": "IDX:BRPT", "d": "Barito Pacific" },
+                { "s": "IDX:PTRO", "d": "Petrosea" },
+                { "s": "IDX:ENRG", "d": "Energi Mega" },
+                { "s": "IDX:MBMA", "d": "MBMA" },
+                { "s": "IDX:NCKL", "d": "Trimegah Bangun" }
+              ],
+              "originalTitle": "Komoditas & Lainnya"
+            }
+          ]
+        }
+        </script>
       </div>
     </div>
   </main>

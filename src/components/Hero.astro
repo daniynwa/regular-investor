@@ -91,9 +91,59 @@ function formatDate(d: any) {
               <span class="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse inline-block"></span>Live
             </span>
           </div>
-          <div class="overflow-hidden rounded-lg">
-            <script type="module" src="https://widgets.tradingview-widget.com/w/en/tv-ticker-tape.js" async is:inline></script>
-            <tv-ticker-tape symbols="FOREXCOM:SPXUSD,FOREXCOM:DJI,CMCMARKETS:GOLD,IDX:COMPOSITE" hide-chart color-theme="dark" is-transparent="true"></tv-ticker-tape>
+          <div class="grid grid-cols-2 gap-2">
+            <!-- IDX COMPOSITE -->
+            <div class="tradingview-widget-container">
+              <div class="tradingview-widget-container__widget"></div>
+              <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-single-quote.js" async is:inline>
+              {
+                "symbol": "IDX:COMPOSITE",
+                "colorTheme": "dark",
+                "isTransparent": true,
+                "locale": "en",
+                "width": "100%"
+              }
+              </script>
+            </div>
+            <!-- GOLD -->
+            <div class="tradingview-widget-container">
+              <div class="tradingview-widget-container__widget"></div>
+              <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-single-quote.js" async is:inline>
+              {
+                "symbol": "TVC:GOLD",
+                "colorTheme": "dark",
+                "isTransparent": true,
+                "locale": "en",
+                "width": "100%"
+              }
+              </script>
+            </div>
+            <!-- S&P 500 -->
+            <div class="tradingview-widget-container">
+              <div class="tradingview-widget-container__widget"></div>
+              <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-single-quote.js" async is:inline>
+              {
+                "symbol": "CAPITALCOM:SPX500",
+                "colorTheme": "dark",
+                "isTransparent": true,
+                "locale": "en",
+                "width": "100%"
+              }
+              </script>
+            </div>
+            <!-- US Oil -->
+            <div class="tradingview-widget-container">
+              <div class="tradingview-widget-container__widget"></div>
+              <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-single-quote.js" async is:inline>
+              {
+                "symbol": "TVC:USOIL",
+                "colorTheme": "dark",
+                "isTransparent": true,
+                "locale": "en",
+                "width": "100%"
+              }
+              </script>
+            </div>
           </div>
           <a href="/kalkulator" class="mt-4 flex items-center justify-center gap-1 text-xs text-green-400 hover:text-green-300 transition-colors">
             Lihat semua pasar

@@ -146,6 +146,18 @@ export async function registerAdmin(email, password, name) {
   }
 }
 
+// ── Reset Password ──────────────────────────────────────────────────────────
+
+export async function resetUserPassword(userId, newPassword) {
+  try {
+    const passwordHash = await hashPassword(newPassword);
+    await query('UPDATE admin_users SET password_hash = ? WHERE id = ?', [passwordHash, userId]);
+    return { success: true };
+  } catch (e) {
+    return { error: 'Gagal mereset password. Pastikan database terhubung.' };
+  }
+}
+
 // ── Session ─────────────────────────────────────────────────────────────────
 
 export async function verifySession(request) {

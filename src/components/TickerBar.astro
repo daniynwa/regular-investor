@@ -4,35 +4,7 @@
 
 <!-- TradingView Widget BEGIN -->
 <div class="tradingview-widget-container" style="background: #0d1525; border-bottom: 1px solid #1e2d3d;">
-  <div class="tradingview-widget-container__widget"></div>
-  <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-tickers.js" async>
-  {
-    "symbols": [
-      { "proName": "IDX:BBCA", "title": "BBCA" },
-      { "proName": "IDX:BBRI", "title": "BBRI" },
-      { "proName": "IDX:ANTM", "title": "ANTM" },
-      { "proName": "IDX:BMRI", "title": "BMRI" },
-      { "proName": "IDX:MDKA", "title": "MDKA" },
-      { "proName": "IDX:BRPT", "title": "BRPT" },
-      { "proName": "IDX:ADRO", "title": "ADRO" },
-      { "proName": "IDX:PTRO", "title": "PTRO" },
-      { "proName": "IDX:TLKM", "title": "TLKM" },
-      { "proName": "IDX:BBNI", "title": "BBNI" },
-      { "proName": "IDX:ENRG", "title": "ENRG" },
-      { "proName": "IDX:MBMA", "title": "MBMA" },
-      { "proName": "IDX:INCO", "title": "INCO" },
-      { "proName": "IDX:GOTO", "title": "GOTO" },
-      { "proName": "IDX:ASII", "title": "ASII" },
-      { "proName": "IDX:ICBP", "title": "ICBP" },
-      { "proName": "IDX:UNVR", "title": "UNVR" },
-      { "proName": "IDX:NCKL", "title": "NCKL" }
-    ],
-    "colorTheme": "dark",
-    "locale": "en",
-    "largeChartUrl": "",
-    "isTransparent": true,
-    "showSymbolLogo": true
-  }
-  </script>
+  <script type="module" src="https://widgets.tradingview-widget.com/w/en/tv-ticker-tape.js" is:inline></script>
+  <tv-ticker-tape symbols="FOREXCOM:SPXUSD,FOREXCOM:NSXUSD,FOREXCOM:DJI,IDX:BBRI,IDX:BBCA,IDX:BMRI,IDX:BBNI,IDX:ANTM,IDX:MDKA,IDX:BRPT,IDX:TLKM,IDX:INCO,IDX:NCKL,IDX:GOTO,IDX:UNVR" hide-chart hover-type="performance-grid" show-hover color-theme="dark" is-transparent="true"></tv-ticker-tape>
 </div>
 <!-- TradingView Widget END -->

@@ -443,6 +443,7 @@ const categoryColors: Record<string, string> = {
                 ${u.status === 'pending' ? `<button class="btn btn-primary btn-sm approve-btn" data-id="${u.id}">✓ Setujui</button>` : ''}
                 ${u.status === 'active' ? `<button class="btn btn-warning btn-sm disable-btn" data-id="${u.id}">Nonaktifkan</button>` : ''}
                 ${u.status === 'disabled' ? `<button class="btn btn-primary btn-sm approve-btn" data-id="${u.id}">Aktifkan</button>` : ''}
+                <button class="btn btn-secondary btn-sm reset-pw-btn" data-id="${u.id}" data-email="${u.email}">🔑 Reset Password</button>
                 <button class="btn btn-danger btn-sm remove-btn" data-id="${u.id}" data-email="${u.email}">Hapus</button>
               </div>
             </td>
@@ -471,6 +472,13 @@ const categoryColors: Record<string, string> = {
             else alert('Gagal menghapus admin.');
           });
         });
+        tbody.querySelectorAll('.reset-pw-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const userId = (btn as HTMLElement).dataset.id!;
+            const email = (btn as HTMLElement).dataset.email!;
+            resetPassword(userId, email);
+          });
+        });
       }
 
       loading.style.display = 'none';
@@ -490,6 +498,33 @@ const categoryColors: Record<string, string> = {
     });
     if (res.ok) loadUsers();
     else alert('Gagal mengubah status admin.');
+  }
+
+  async function resetPassword(userId: string, email: string) {
+    const newPassword = prompt(`Reset password untuk "${email}"\n\nMasukkan password baru (minimal 6 karakter):`);
+    if (!newPassword) return;
+    if (newPassword.length < 6) {
+      alert('Password minimal 6 karakter.');
+      return;
+    }
+    const confirmPw = confirm(`Yakin reset password untuk "${email}"?\n\nPassword baru akan langsung aktif.`);
+    if (!confirmPw) return;
+    try {
+      const res = await fetch('/api/admin/reset-password', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId: Number(userId), newPassword }),
+        credentials: 'same-origin',
+      });
+      if (res.ok) {
+        alert(`✅ Password untuk "${email}" berhasil direset!`);
+      } else {
+        const data = await res.json();
+        alert(`❌ Gagal: ${data.error || 'Unknown error'}`);
+      }
+    } catch {
+      alert('❌ Gagal terhubung ke server.');
+    }
   }
 </script>
 </body>

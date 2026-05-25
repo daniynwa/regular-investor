@@ -1,0 +1,55 @@
+---
+import Layout from '../layouts/Layout.astro';
+import TickerBar from '../components/TickerBar.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<Layout title="Syarat dan Ketentuan | Regular Investor">
+  <TickerBar />
+  <Header />
+
+  <main class="max-w-4xl mx-auto px-4 py-12">
+    <div class="bg-[#151f2e] border border-[#1e2d3d] rounded-2xl p-6 md:p-10">
+      <h1 class="text-2xl md:text-3xl font-bold text-white mb-8">Syarat dan Ketentuan</h1>
+      
+      <div class="prose prose-invert prose-green max-w-none prose-p:text-slate-300 prose-headings:text-white prose-a:text-green-400 prose-li:text-slate-300">
+        <p>Selamat datang di Regular Investor. Silakan membaca Syarat dan Ketentuan ini dengan seksama sebelum menggunakan situs web kami.</p>
+
+        <h3 class="text-xl font-bold text-white mt-8 mb-4">1. Penerimaan Syarat</h3>
+        <p>Dengan mengakses dan menggunakan situs web <strong>Regular Investor</strong> (selanjutnya disebut "Platform"), Anda setuju untuk terikat oleh Syarat dan Ketentuan ini, serta seluruh hukum dan peraturan yang berlaku. Jika Anda tidak setuju dengan ketentuan ini, Anda dilarang untuk menggunakan atau mengakses Platform ini.</p>
+
+        <h3 class="text-xl font-bold text-white mt-8 mb-4">2. Penggunaan Platform</h3>
+        <p>Platform ini disediakan untuk tujuan informasi dan edukasi investasi. Anda setuju untuk menggunakan Platform ini hanya untuk tujuan yang sah dan dengan cara yang tidak melanggar hak-hak orang lain, atau membatasi atau menghalangi penggunaan dan penikmatan Platform oleh pihak ketiga.</p>
+        <ul class="list-disc pl-5 space-y-2">
+            <li>Anda dilarang menggunakan konten dari Platform ini untuk tujuan komersial tanpa izin tertulis dari kami.</li>
+            <li>Anda dilarang melakukan tindakan yang dapat merusak, melumpuhkan, atau memberikan beban berlebih pada infrastruktur Platform.</li>
+        </ul>
+
+        <h3 class="text-xl font-bold text-white mt-8 mb-4">3. Penyangkalan (Disclaimer) Investasi</h3>
+        <p>Informasi, data, kalkulator simulasi, dan materi yang disediakan di Platform <strong>Bukanlah Saran Investasi (Not Financial Advice)</strong>. Semua informasi yang disajikan bertujuan sebagai referensi dan edukasi semata.</p>
+        <ul class="list-disc pl-5 space-y-2">
+            <li>Investasi di pasar modal, kripto, forex, dan instrumen lainnya memiliki risiko kerugian finansial.</li>
+            <li>Keputusan investasi adalah tanggung jawab Anda sepenuhnya. Kami tidak bertanggung jawab atas kerugian atau kerusakan, baik secara langsung maupun tidak langsung, yang timbul dari keputusan investasi berdasarkan informasi dari Platform ini.</li>
+            <li>Simulasi dari kalkulator investasi kami didasarkan pada proyeksi matematis yang disederhanakan dan tidak menjamin hasil di masa depan.</li>
+        </ul>
+
+        <h3 class="text-xl font-bold text-white mt-8 mb-4">4. Hak Kekayaan Intelektual</h3>
+        <p>Seluruh konten, merek dagang, logo, teks, grafis, antarmuka pengguna, kode perangkat lunak, dan materi lainnya yang terdapat di dalam Platform ini adalah milik <strong>Regular Investor</strong> atau dilisensikan kepada kami dan dilindungi oleh undang-undang hak cipta dan kekayaan intelektual.</p>
+
+        <h3 class="text-xl font-bold text-white mt-8 mb-4">5. Tautan ke Situs Web Pihak Ketiga</h3>
+        <p>Platform kami mungkin berisi tautan ke situs web atau layanan pihak ketiga yang tidak dimiliki atau dikendalikan oleh Regular Investor. Kami tidak memiliki kendali atas, dan tidak bertanggung jawab atas konten, kebijakan privasi, atau praktik dari situs web pihak ketiga mana pun.</p>
+
+        <h3 class="text-xl font-bold text-white mt-8 mb-4">6. Perubahan Syarat dan Ketentuan</h3>
+        <p>Regular Investor berhak untuk merevisi Syarat dan Ketentuan ini kapan saja tanpa pemberitahuan sebelumnya. Dengan menggunakan Platform ini, Anda setuju untuk terikat oleh versi Syarat dan Ketentuan yang terbaru saat ini.</p>
+
+        <h3 class="text-xl font-bold text-white mt-8 mb-4">7. Hukum yang Berlaku</h3>
+        <p>Syarat dan Ketentuan ini diatur oleh dan ditafsirkan sesuai dengan hukum yang berlaku di Republik Indonesia. Segala sengketa yang berkaitan dengan syarat ini akan diselesaikan dalam yurisdiksi pengadilan di Indonesia.</p>
+
+        <p class="mt-8 font-bold text-sm text-slate-400">Pembaruan Terakhir: {new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}</p>
+      </div>
+    </div>
+  </main>
+
+  <Footer />
+</Layout>

@@ -131,8 +131,12 @@ const telegramHref = socialLinks.social_telegram;
     <div class="pt-6 border-t border-[#1e2d3d] flex flex-col sm:flex-row items-center justify-between gap-3">
       <p class="text-xs text-slate-600">© 2026 Regular Investor. Semua hak dilindungi.</p>
       <div class="flex items-center gap-4">
-        {['Privacy', 'Terms', 'Sitemap'].map(item => (
-          <a href="#" class="text-xs text-slate-600 hover:text-slate-400 transition-colors">{item}</a>
+        {[
+          { name: 'Privacy', href: '/kebijakan-privasi' },
+          { name: 'Terms', href: '/syarat-ketentuan' },
+          { name: 'Sitemap', href: '/sitemap-index.xml' }
+        ].map(item => (
+          <a href={item.href} class="text-xs text-slate-600 hover:text-slate-400 transition-colors">{item.name}</a>
         ))}
       </div>
     </div>

@@ -4,7 +4,32 @@
 
 <!-- TradingView Widget BEGIN -->
 <div class="tradingview-widget-container" style="background: #0d1525; border-bottom: 1px solid #1e2d3d;">
-  <script type="module" src="https://widgets.tradingview-widget.com/w/en/tv-ticker-tape.js" is:inline></script>
-  <tv-ticker-tape symbols="FOREXCOM:SPXUSD,FOREXCOM:NSXUSD,FOREXCOM:DJI,IDX:BBRI,IDX:BBCA,IDX:BMRI,IDX:BBNI,IDX:ANTM,IDX:MDKA,IDX:BRPT,IDX:TLKM,IDX:INCO,IDX:NCKL,IDX:GOTO,IDX:UNVR" hide-chart hover-type="performance-grid" show-hover theme="dark"></tv-ticker-tape>
+  <div class="tradingview-widget-container__widget"></div>
+  <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js" async is:inline>
+  {
+  "symbols": [
+    { "proName": "FOREXCOM:SPXUSD", "title": "SPXUSD" },
+    { "proName": "FOREXCOM:NSXUSD", "title": "NSXUSD" },
+    { "proName": "FOREXCOM:DJI", "title": "DJI" },
+    { "proName": "IDX:BBRI", "title": "BBRI" },
+    { "proName": "IDX:BBCA", "title": "BBCA" },
+    { "proName": "IDX:BMRI", "title": "BMRI" },
+    { "proName": "IDX:BBNI", "title": "BBNI" },
+    { "proName": "IDX:ANTM", "title": "ANTM" },
+    { "proName": "IDX:MDKA", "title": "MDKA" },
+    { "proName": "IDX:BRPT", "title": "BRPT" },
+    { "proName": "IDX:TLKM", "title": "TLKM" },
+    { "proName": "IDX:INCO", "title": "INCO" },
+    { "proName": "IDX:NCKL", "title": "NCKL" },
+    { "proName": "IDX:GOTO", "title": "GOTO" },
+    { "proName": "IDX:UNVR", "title": "UNVR" }
+  ],
+  "showSymbolLogo": true,
+  "isTransparent": true,
+  "displayMode": "adaptive",
+  "colorTheme": "dark",
+  "locale": "id"
+}
+  </script>
 </div>
 <!-- TradingView Widget END -->

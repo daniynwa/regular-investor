@@ -98,7 +98,7 @@ const fallbackParagraphs = [
             </svg>
             {article.read_time || article.readTime || 3} menit
           </div>
-          <div class="hidden sm:flex items-center gap-2">
+          <div class="flex sm:flex-nowrap flex-wrap items-center gap-2 mt-4 sm:mt-0">
             <a href={`https://twitter.com/intent/tweet?url=https://regular-investor.com/${slug}&text=${encodeURIComponent(article.title)}`} target="_blank" rel="noopener noreferrer" class="w-7 h-7 flex items-center justify-center bg-[#1e2d3d] hover:bg-[#15202b] rounded-lg text-slate-500 hover:text-white transition-all font-bold" aria-label="Share to X">
               <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
             </a>

@@ -45,6 +45,7 @@ CREATE TABLE IF NOT EXISTS admin_users (
   email         VARCHAR(255)     NOT NULL,
   password_hash VARCHAR(255)     NOT NULL,
   name          VARCHAR(100)     DEFAULT NULL,
+  phone         VARCHAR(20)      DEFAULT NULL,
   status        ENUM('pending','active','disabled') NOT NULL DEFAULT 'pending',
   created_at    TIMESTAMP        NOT NULL DEFAULT CURRENT_TIMESTAMP,
 

@@ -347,6 +347,7 @@ const dateStr = article?.date
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
+        credentials: 'same-origin',
       });
       const data = await res.json();
       if (res.ok) {
@@ -373,7 +374,7 @@ const dateStr = article?.date
     if (!confirm(`Hapus artikel:\n"${title}"\n\nTindakan ini tidak bisa dibatalkan.`)) return;
 
     try {
-      const res = await fetch(`/api/admin/articles/${articleId}`, { method: 'DELETE' });
+      const res = await fetch(`/api/admin/articles/${articleId}`, { method: 'DELETE', credentials: 'same-origin' });
       if (res.ok) {
         showToast('Artikel dihapus, mengalihkan...');
         setTimeout(() => window.location.href = '/admin/dashboard', 1200);
@@ -391,7 +392,7 @@ const dateStr = article?.date
   // Logout
   document.getElementById('logoutBtn')?.addEventListener('click', async (e) => {
     e.preventDefault();
-    await fetch('/api/admin/logout', { method: 'POST' });
+    await fetch('/api/admin/logout', { method: 'POST', credentials: 'same-origin' });
     window.location.href = '/admin';
   });
 </script>

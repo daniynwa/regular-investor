@@ -468,7 +468,7 @@ const categoryColors: Record<string, string> = {
       const id = (btn as HTMLElement).dataset.id;
       const title = (btn as HTMLElement).dataset.title;
       if (!confirm(`Hapus artikel:\n"${title}"\n\nTindakan ini tidak bisa dibatalkan.`)) return;
-      const res = await fetch(`/api/admin/articles/${id}`, { method: 'DELETE' });
+      const res = await fetch(`/api/admin/articles/${id}`, { method: 'DELETE', credentials: 'same-origin' });
       if (res.ok) {
         btn.closest('tr')?.remove();
       } else {

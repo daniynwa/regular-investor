@@ -2,7 +2,6 @@
 import { defineConfig } from 'astro/config';
 import tailwindcss from '@tailwindcss/vite';
 import node from '@astrojs/node';
-import sitemap from '@astrojs/sitemap';
 
 export default defineConfig({
   site: 'https://regular-investor.com',
@@ -12,5 +11,4 @@ export default defineConfig({
     plugins: [tailwindcss()],
     envPrefix: ['PUBLIC_', 'DB_', 'ADMIN_'],
   },
-  integrations: [sitemap()],
 });

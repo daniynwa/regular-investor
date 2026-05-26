@@ -1,6 +1,6 @@
 ---
 import { verifySession } from '../../lib/auth.js';
-import { getAllArticles, getArticlesByCategory, countArticles, countArticlesByCategory, getSocialLinks } from '../../lib/queries.js';
+import { getAllArticles, getArticlesByCategory, countArticles, countArticlesByCategory, getSocialLinks, getAdsSettings } from '../../lib/queries.js';
 
 const session = await verifySession(Astro.request);
 if (!session) return Astro.redirect('/admin');
@@ -14,6 +14,7 @@ let articles: any[] = [];
 let total = 0;
 let stats: any[] = [];
 let socialLinks: any = {};
+let adsSettings: any = {};
 let currentUser: any = null;
 let dbOk = false;
 
@@ -28,11 +29,12 @@ if (session.userId) {
 }
 
 try {
-  [articles, total, stats, socialLinks] = await Promise.all([
+  [articles, total, stats, socialLinks, adsSettings] = await Promise.all([
     categoryFilter ? getArticlesByCategory(categoryFilter, { limit: 100 }) : getAllArticles({ limit: 100 }),
     countArticles(),
     countArticlesByCategory(),
     getSocialLinks(),
+    getAdsSettings(),
   ]);
   dbOk = true;
 } catch (e) {
@@ -40,6 +42,10 @@ try {
   socialLinks = {
     social_facebook: '', social_twitter: '', social_instagram: '',
     social_youtube: '', social_telegram: '',
+  };
+  adsSettings = {
+    ad_sidebar_image: '', ad_sidebar_link: '', ad_sidebar_active: '0',
+    ad_top_image: '', ad_top_link: '', ad_top_active: '0',
   };
 }
 
@@ -151,6 +157,7 @@ const categoryColors: Record<string, string> = {
     <a href="/admin/articles/new" class="nav-item">✏️ Artikel Baru</a>
     <div class="nav-section">Pengaturan</div>
     <button class="nav-item" data-panel="profile">👤 Profil Saya</button>
+    <button class="nav-item" data-panel="ads">📢 Manajemen Iklan</button>
     <button class="nav-item" data-panel="social">🔗 Social Media</button>
     <button class="nav-item" data-panel="users">👥 Kelola Admin</button>
     <div class="nav-section">Konten</div>
@@ -289,6 +296,64 @@ const categoryColors: Record<string, string> = {
         </div>
       </div>
 
+      <!-- ═══ ADS PANEL ═══ -->
+      <div class="panel" id="panel-ads">
+        <div class="settings-card">
+          <h3>📢 Manajemen Iklan (Banner Ads)</h3>
+          <p style="font-size:12px; color:#64748b; margin-bottom:20px;">
+            Atur gambar dan tautan iklan yang muncul di website. Gunakan URL gambar untuk banner (gambar akan menyesuaikan ukuran frame secara otomatis).
+          </p>
+          
+          <h4 style="font-size:12px; font-weight:700; color:#fff; margin:24px 0 12px; border-bottom:1px solid #1e2d3d; padding-bottom:8px;">1. Sidebar Banner (Kotak Kanan)</h4>
+          <div style="display:flex; align-items:center; gap:10px; margin-bottom:16px;">
+            <label style="font-size:11px; font-weight:700; color:#94a3b8; text-transform:uppercase;">Status Aktif:</label>
+            <label style="position:relative; display:inline-block; width:40px; height:22px;">
+              <input type="checkbox" id="adSidebarActive" style="opacity:0; width:0; height:0;" {adsSettings.ad_sidebar_active === '1' ? 'checked' : ''}/>
+              <span style="position:absolute; cursor:pointer; top:0; left:0; right:0; bottom:0; background-color:#1e2d3d; transition:.4s; border-radius:34px;" class="slider"></span>
+              <style>
+                #adSidebarActive:checked + .slider { background-color: #22c55e; }
+                .slider:before { position:absolute; content:""; height:16px; width:16px; left:3px; bottom:3px; background-color:white; transition:.4s; border-radius:50%; }
+                #adSidebarActive:checked + .slider:before { transform: translateX(18px); }
+              </style>
+            </label>
+          </div>
+          <div class="form-group">
+            <label>Gambar Banner URL</label>
+            <input type="url" id="adSidebarImage" value={adsSettings.ad_sidebar_image || ''} placeholder="https://example.com/banner-300x250.jpg"/>
+            <div class="hint">Rekomendasi ukuran: 300x250px atau 300x600px</div>
+          </div>
+          <div class="form-group">
+            <label>Link Tujuan (Target URL)</label>
+            <input type="url" id="adSidebarLink" value={adsSettings.ad_sidebar_link || ''} placeholder="https://dompetx.com"/>
+          </div>
+
+          <h4 style="font-size:12px; font-weight:700; color:#fff; margin:32px 0 12px; border-bottom:1px solid #1e2d3d; padding-bottom:8px;">2. Top Banner (Bawah Header)</h4>
+          <div style="display:flex; align-items:center; gap:10px; margin-bottom:16px;">
+            <label style="font-size:11px; font-weight:700; color:#94a3b8; text-transform:uppercase;">Status Aktif:</label>
+            <label style="position:relative; display:inline-block; width:40px; height:22px;">
+              <input type="checkbox" id="adTopActive" style="opacity:0; width:0; height:0;" {adsSettings.ad_top_active === '1' ? 'checked' : ''}/>
+              <span style="position:absolute; cursor:pointer; top:0; left:0; right:0; bottom:0; background-color:#1e2d3d; transition:.4s; border-radius:34px;" class="slider"></span>
+              <style>
+                #adTopActive:checked + .slider { background-color: #22c55e; }
+                #adTopActive:checked + .slider:before { transform: translateX(18px); }
+              </style>
+            </label>
+          </div>
+          <div class="form-group">
+            <label>Gambar Banner URL</label>
+            <input type="url" id="adTopImage" value={adsSettings.ad_top_image || ''} placeholder="https://example.com/banner-728x90.jpg"/>
+            <div class="hint">Rekomendasi ukuran: 728x90px (Horizontal)</div>
+          </div>
+          <div class="form-group">
+            <label>Link Tujuan (Target URL)</label>
+            <input type="url" id="adTopLink" value={adsSettings.ad_top_link || ''} placeholder="https://dompetx.com/promo"/>
+          </div>
+
+          <button class="btn btn-primary" id="saveAdsBtn" style="margin-top:16px;">💾 Simpan Pengaturan Iklan</button>
+          <div class="save-msg" id="adsMsg"></div>
+        </div>
+      </div>
+
       <!-- ═══ SOCIAL MEDIA PANEL ═══ -->
       <div class="panel" id="panel-social">
         <div class="settings-card">
@@ -368,6 +433,7 @@ const categoryColors: Record<string, string> = {
       const titles: Record<string, string> = {
         dashboard: 'Dashboard',
         profile: 'Profil Saya',
+        ads: 'Manajemen Iklan',
         social: 'Social Media Settings',
         users: 'Kelola Admin',
       };
@@ -447,6 +513,45 @@ const categoryColors: Record<string, string> = {
     }
     btn.disabled = false;
     btn.textContent = '💾 Simpan Social Media';
+  });
+
+  // ── Save Ads ─────────────────────────────────────────────────────────────────
+  document.getElementById('saveAdsBtn')?.addEventListener('click', async () => {
+    const btn = document.getElementById('saveAdsBtn') as HTMLButtonElement;
+    const msg = document.getElementById('adsMsg')!;
+    btn.disabled = true;
+    btn.textContent = 'Menyimpan...';
+    msg.classList.remove('show', 'success', 'error');
+
+    const data = {
+      ad_sidebar_image: (document.getElementById('adSidebarImage') as HTMLInputElement).value,
+      ad_sidebar_link: (document.getElementById('adSidebarLink') as HTMLInputElement).value,
+      ad_sidebar_active: (document.getElementById('adSidebarActive') as HTMLInputElement).checked ? '1' : '0',
+      ad_top_image: (document.getElementById('adTopImage') as HTMLInputElement).value,
+      ad_top_link: (document.getElementById('adTopLink') as HTMLInputElement).value,
+      ad_top_active: (document.getElementById('adTopActive') as HTMLInputElement).checked ? '1' : '0',
+    };
+
+    try {
+      const res = await fetch('/api/admin/ads', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+        credentials: 'same-origin',
+      });
+      if (res.ok) {
+        msg.textContent = '✓ Pengaturan iklan berhasil disimpan!';
+        msg.classList.add('show', 'success');
+      } else {
+        msg.textContent = '✗ Gagal menyimpan pengaturan iklan.';
+        msg.classList.add('show', 'error');
+      }
+    } catch {
+      msg.textContent = '✗ Gagal terhubung ke server.';
+      msg.classList.add('show', 'error');
+    }
+    btn.disabled = false;
+    btn.textContent = '💾 Simpan Pengaturan Iklan';
   });
 
   // ── Save Profile ──────────────────────────────────────────────────────────

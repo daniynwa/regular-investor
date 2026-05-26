@@ -130,3 +130,28 @@ export async function updateSetting(key, value) {
   );
 }
 
+export async function getAdsSettings() {
+  const defaults = {
+    ad_sidebar_image: '',
+    ad_sidebar_link: '',
+    ad_sidebar_active: '0',
+    ad_top_image: '',
+    ad_top_link: '',
+    ad_top_active: '0',
+  };
+  try {
+    const rows = await query(
+      `SELECT setting_key, setting_value FROM site_settings WHERE setting_key LIKE 'ad_%'`
+    );
+    const ads = { ...defaults };
+    rows.forEach((row) => {
+      if (row.setting_key in ads) {
+        ads[row.setting_key] = row.setting_value || '';
+      }
+    });
+    return ads;
+  } catch {
+    return defaults;
+  }
+}
+

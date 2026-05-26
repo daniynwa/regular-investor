@@ -18,12 +18,9 @@ try {
 const isActive = position === 'sidebar' ? adsSettings.ad_sidebar_active === '1' : adsSettings.ad_top_active === '1';
 const imageUrl = position === 'sidebar' ? adsSettings.ad_sidebar_image : adsSettings.ad_top_image;
 const targetLink = position === 'sidebar' ? adsSettings.ad_sidebar_link : adsSettings.ad_top_link;
-
-if (!isActive || !imageUrl) {
-  return null;
-}
 ---
 
+{isActive && imageUrl && (
 <div class={`ad-banner-container ${position === 'top' ? 'mb-8' : 'mb-6'}`}>
   <div class="flex items-center gap-2 mb-2">
     <span class="text-[10px] uppercase font-black tracking-widest text-slate-500 bg-slate-800/50 px-2 py-0.5 rounded-full">Sponsored</span>
@@ -38,3 +35,4 @@ if (!isActive || !imageUrl) {
     />
   </a>
 </div>
+)}

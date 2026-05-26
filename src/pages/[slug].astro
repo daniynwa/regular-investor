@@ -58,7 +58,12 @@ const fallbackParagraphs = [
 ];
 ---
 
-<Layout title={`${article.title} — Regular Investor`} description={article.excerpt}>
+<Layout 
+  title={`${article.title} — Regular Investor`} 
+  description={article.excerpt}
+  image={article.image}
+  type="article"
+>
   <TickerBar />
   <Header />
 

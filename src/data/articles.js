@@ -470,7 +470,7 @@ export const marketData = [
 ];
 
 export const categories = [
-  { name: "Compound Interest Calculator", slug: "kalkulator", icon: "📈" },
+  { name: "Compound Interest Calculator", slug: "compound-interest-calculator", icon: "📈" },
   { name: "Economics", slug: "economics", icon: "🏦" },
   { name: "Investment", slug: "investment", icon: "💰" },
   { name: "Nasional", slug: "nasional", icon: "🇮🇩" },

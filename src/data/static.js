@@ -16,7 +16,7 @@ export const marketData = [
 ];
 
 export const categories = [
-  { name: "Compound Interest Calculator", slug: "kalkulator", icon: "📈", color: "amber" },
+  { name: "Compound Interest Calculator", slug: "compound-interest-calculator", icon: "📈", color: "amber" },
   { name: "Economics",     slug: "economics",     icon: "🏦", color: "blue"   },
   { name: "Investment",    slug: "investment",    icon: "💰", color: "green"  },
   { name: "Nasional",      slug: "nasional",      icon: "🇮🇩", color: "red"   },

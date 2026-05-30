@@ -278,8 +278,8 @@ const dateStr = article?.date
 
   // Load existing content
   const contentInput = document.getElementById('content');
-  if (contentInput.value) {
-    quill.root.innerHTML = contentInput.value;
+  if (contentInput && contentInput.value && contentInput.value.trim()) {
+    quill.clipboard.dangerouslyPasteHTML(contentInput.value);
   }
 
   // Image preview

@@ -279,7 +279,12 @@ const dateStr = article?.date
   // Load existing content
   const contentInput = document.getElementById('content');
   if (contentInput && contentInput.value && contentInput.value.trim()) {
-    quill.clipboard.dangerouslyPasteHTML(contentInput.value);
+    try {
+      const delta = quill.clipboard.convert({ html: contentInput.value });
+      quill.setContents(delta, 'silent');
+    } catch (err) {
+      quill.root.innerHTML = contentInput.value;
+    }
   }
 
   // Image preview
